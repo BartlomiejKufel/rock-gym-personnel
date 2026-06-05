@@ -39,9 +39,9 @@ namespace RockGym.ViewModels
             LoginCommand = new RelayCommand(ExecuteLogin, CanExecuteLogin);
         }
 
+        // Przycisk logowania jest aktywny, gdy wpisano nazwę użytkownika
         private bool CanExecuteLogin(object? parameter)
         {
-            // Przycisk logowania jest aktywny, gdy wpisano nazwę użytkownika
             return !string.IsNullOrWhiteSpace(Login);
         }
 
@@ -96,17 +96,13 @@ namespace RockGym.ViewModels
                         return;
                     }
 
-                    // Logowanie pomyślne - otwarcie okna głównego na wątku UI
                     Application.Current.Dispatcher.Invoke(() =>
                     {
-                        // Utwórz i pokaż główne okno aplikacji
-                        var mainWindow = new RockGym.MainWindow();
+                        var mainWindow = new RockGym.MainWindow(user);
                         mainWindow.Show();
 
-                        // Przypisz główne okno do aplikacji
                         Application.Current.MainWindow = mainWindow;
 
-                        // Zamknij okno logowania
                         var loginWindow = Window.GetWindow(passwordBox);
                         loginWindow?.Close();
                     });

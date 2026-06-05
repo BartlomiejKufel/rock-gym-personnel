@@ -1,0 +1,200 @@
+<Window x:Class="RockGym.Views.CustomMessageBoxWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Wiadomość" 
+        Height="Auto" 
+        Width="420"
+        SizeToContent="Height"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        ShowInTaskbar="False">
+
+    <Window.Resources>
+        <!-- Style dla przycisków w MessageBox -->
+        <Style x:Key="MessageBoxButtonBase" TargetType="Button">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="Height" Value="32"/>
+            <Setter Property="MinWidth" Value="85"/>
+            <Setter Property="Margin" Value="5,0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border"
+                                CornerRadius="5"
+                                Background="{TemplateBinding Background}"
+                                SnapsToDevicePixels="True">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Przycisk Pozytywny -->
+        <Style x:Key="PrimaryBtnStyle" TargetType="Button" BasedOn="{StaticResource MessageBoxButtonBase}">
+            <Setter Property="Background" Value="#FF7F3F"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#FF945B"/>
+                    <Setter Property="Cursor" Value="Hand"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Przycisk Neutralny -->
+        <Style x:Key="NeutralBtnStyle" TargetType="Button" BasedOn="{StaticResource MessageBoxButtonBase}">
+            <Setter Property="Background" Value="#2D3748"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#4A5568"/>
+                    <Setter Property="Cursor" Value="Hand"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Przycisk Negatywny -->
+        <Style x:Key="DangerBtnStyle" TargetType="Button" BasedOn="{StaticResource MessageBoxButtonBase}">
+            <Setter Property="Background" Value="#E53E3E"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#FC8181"/>
+                    <Setter Property="Cursor" Value="Hand"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+    <Border x:Name="OuterBorder"
+            Background="#111622"
+            BorderBrush="#2D3748"
+            BorderThickness="1.5"
+            CornerRadius="8"
+            Margin="10">
+        <Border.Effect>
+            <DropShadowEffect BlurRadius="12" Color="Black" Opacity="0.5" ShadowDepth="3"/>
+        </Border.Effect>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="35"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <Border Grid.Row="0" 
+                    Background="#1A1F26" 
+                    CornerRadius="7,7,0,0" 
+                    MouseLeftButtonDown="TitleBar_MouseLeftButtonDown"
+                    Padding="15,0,10,0">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock x:Name="TitleTextBlock"
+                               Text="Wiadomość"
+                               Foreground="White"
+                               FontSize="13"
+                               FontWeight="Bold"
+                               VerticalAlignment="Center"
+                               FontFamily="Segoe UI"/>
+
+                    <Button Grid.Column="1"
+                            x:Name="CloseButton"
+                            Content="✕"
+                            Foreground="#88FFFFFF"
+                            Background="Transparent"
+                            BorderThickness="0"
+                            FontSize="14"
+                            Width="26"
+                            Height="26"
+                            VerticalAlignment="Center"
+                            Cursor="Hand"
+                            Click="CloseButton_Click">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border x:Name="border" Background="Transparent" CornerRadius="13">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Foreground" Value="White"/>
+                                        <Setter TargetName="border" Property="Background" Value="#E53E3E"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                </Grid>
+            </Border>
+
+            <Grid Grid.Row="1" Margin="20,20,20,15">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid Grid.Column="0" Margin="0,0,18,0" VerticalAlignment="Top" Width="42" Height="42">
+                    <!-- Ikona Błędu -->
+                    <Viewbox x:Name="ErrorIcon" Visibility="Collapsed">
+                        <Path Data="M12,2C6.47,2 2,6.47 2,12C2,17.53 6.47,22 12,22C17.53,22 22,17.53 22,12C22,6.47 17.53,2 12,2M17,15.59L15.59,17L12,13.41L8.41,17L7,15.59L10.59,12L7,8.41L8.41,7L12,10.59L15.59,7L17,8.41L13.41,12L17,15.59Z" Fill="#E53E3E"/>
+                    </Viewbox>
+                    <!-- Ikona Ostrzeżenia -->
+                    <Viewbox x:Name="WarningIcon" Visibility="Collapsed">
+                        <Path Data="M12,2L1,21H23L12,2M12,6C12.5,6 13,6.5 13,7V14C13,14.5 12.5,15 12,15C11.5,15 11,14.5 11,14V7C11,6.5 11.5,6 12,6M12,17A1.5,1.5 0 1,1 10.5,18.5A1.5,1.5 0 0,1 12,17Z" Fill="#FF7F3F"/>
+                    </Viewbox>
+                    <!-- Ikona Informacji -->
+                    <Viewbox x:Name="InfoIcon" Visibility="Collapsed">
+                        <Path Data="M12,2A10,10 0 1,0 22,12A10,10 0 0,0 12,2M11,7H13V9H11V7M11,11H13V17H11V11Z" Fill="#3182CE"/>
+                    </Viewbox>
+                    <!-- Ikona Pytania -->
+                    <Viewbox x:Name="QuestionIcon" Visibility="Collapsed">
+                        <Path Data="M8,16 C3.58172,16 0,12.4183 0,8 C0,3.58172 3.58172,0 8,0 C12.4183,0 16,3.58172 16,8 C16,12.4183 12.4183,16 8,16 Z M4.4325,6.19122 C4.4325,5.7729 4.57483,5.34907 4.8595,4.91974 C5.14417,4.49041 5.5595,4.13484 6.1055,3.85303 C6.6515,3.57121 7.28848,3.43033 8.01648,3.43033 C8.69315,3.43033 9.2905,3.54811 9.8085,3.78369 C10.3265,4.01927 10.7267,4.33961 11.009,4.74472 C11.2913,5.14983 11.4325,5.59017 11.4325,6.06573 C11.4325,6.44002 11.352,6.76805 11.191,7.04987 C11.03,7.33168 10.8387,7.57497 10.617,7.77972 C10.3953,7.98448 9.9975,8.32904 9.42349,8.81342 C9.26483,8.94992 9.13766,9.06989 9.04199,9.17337 C8.94633,9.27685 8.87516,9.37153 8.82849,9.4574 C8.4428,10.3468 6.77018,10.2464 7.0925,9.00165 C7.21383,8.73084 7.37483,8.49306 7.5755,8.2883 C7.77617,8.08354 8.04681,7.84026 8.38748,7.55844 C8.68615,7.31185 8.902,7.12583 9.035,7.00034 C9.168,6.87484 9.28,6.73502 9.371,6.5809 C9.462,6.42678 9.50748,6.25946 9.50748,6.07892 C9.50748,5.72665 9.36867,5.42944 9.091,5.18726 C8.81334,4.94507 8.45515,4.82397 8.01648,4.82397 C7.50314,4.82397 7.12514,4.94616 6.88248,5.19055 C6.63981,5.43494 6.43448,5.79491 6.26648,6.27048 C6.10781,6.76806 5.80683,7.01685 5.36349,7.01685 C5.10216,7.01685 4.88166,6.92988 4.702,6.75595 C4.52233,6.58202 4.4325,6.39378 4.4325,6.19122 Z M8,13 C7.44771,13 7,12.5523 7,12 C7,11.4477 7.44771,11 8,11 C8.55229,11 9,11.4477 9,12 C9,12.5523 8.55229,13 8,13 Z" Fill="#805AD5"/>
+                    </Viewbox>
+                    <!-- Ikona Sukcesu -->
+                    <Viewbox x:Name="SuccessIcon" Visibility="Collapsed">
+                        <Path Data="M18,2A16,16,0,1,0,34,18,16,16,0,0,0,18,2ZM28.45,12.63,15.31,25.76,7.55,18a1.4,1.4,0,0,1,2-2l5.78,5.78L26.47,10.65a1.4,1.4,0,1,1,2,2Z" Fill="#38A169"/>
+                    </Viewbox>
+                </Grid>
+
+                <TextBlock Grid.Column="1"
+                           x:Name="MessageTextBlock"
+                           Text="Placekholder."
+                           Foreground="White"
+                           FontSize="14"
+                           TextWrapping="Wrap"
+                           VerticalAlignment="Center"
+                           LineHeight="20"
+                           FontFamily="Segoe UI"/>
+            </Grid>
+
+            <Border Grid.Row="2" 
+                    Background="#161C2A" 
+                    CornerRadius="0,0,7,7" 
+                    Padding="15,12" 
+                    BorderBrush="#2D3748" 
+                    BorderThickness="0,1,0,0">
+                <StackPanel x:Name="ButtonsPanel" 
+                            Orientation="Horizontal" 
+                            HorizontalAlignment="Right">
+                    
+                    <!-- Przyciski odpowiedzi -->
+                    <Button x:Name="BtnOk" Style="{StaticResource PrimaryBtnStyle}" Content="OK" Click="BtnOk_Click" Visibility="Collapsed"/>
+                    <Button x:Name="BtnYes" Style="{StaticResource PrimaryBtnStyle}" Content="Tak" Click="BtnYes_Click" Visibility="Collapsed"/>
+                    <Button x:Name="BtnNo" Style="{StaticResource NeutralBtnStyle}" Content="Nie" Click="BtnNo_Click" Visibility="Collapsed"/>
+                    <Button x:Name="BtnCancel" Style="{StaticResource NeutralBtnStyle}" Content="Anuluj" Click="BtnCancel_Click" Visibility="Collapsed"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Border>
+</Window>
