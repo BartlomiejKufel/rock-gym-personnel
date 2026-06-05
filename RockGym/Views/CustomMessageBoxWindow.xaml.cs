@@ -34,20 +34,19 @@ namespace RockGym.Views
 
             switch (icon)
             {
-                case MessageBoxImage.Error: // Hand, Stop
+                case MessageBoxImage.Error:
                     ErrorIcon.Visibility = Visibility.Visible;
                     break;
-                case MessageBoxImage.Warning: // Exclamation
+                case MessageBoxImage.Warning:
                     WarningIcon.Visibility = Visibility.Visible;
                     break;
                 case MessageBoxImage.Question:
                     QuestionIcon.Visibility = Visibility.Visible;
                     break;
-                case MessageBoxImage.Information: // Asterisk
+                case MessageBoxImage.Information:
                     InfoIcon.Visibility = Visibility.Visible;
                     break;
                 default:
-                    // Obsługa rzutowania oraz ikony sukcesu
                     int iconVal = (int)icon;
                     if (iconVal == 16)
                         ErrorIcon.Visibility = Visibility.Visible;
@@ -57,7 +56,7 @@ namespace RockGym.Views
                         QuestionIcon.Visibility = Visibility.Visible;
                     else if (iconVal == 64)
                         InfoIcon.Visibility = Visibility.Visible;
-                    else if (iconVal == 200) // custom sukces
+                    else if (iconVal == 200)
                         SuccessIcon.Visibility = Visibility.Visible;
                     break;
             }
@@ -117,7 +116,7 @@ namespace RockGym.Views
                         SystemSounds.Asterisk.Play();
                         break;
                     default:
-                        if ((int)icon == 200) // sukces
+                        if ((int)icon == 200)
                             SystemSounds.Asterisk.Play();
                         else
                             SystemSounds.Beep.Play();
@@ -126,7 +125,7 @@ namespace RockGym.Views
             }
             catch
             {
-                // Ignorujemy błędy odtwarzania dźwięków
+
             }
         }
 
@@ -145,7 +144,7 @@ namespace RockGym.Views
             else if (BtnNo.Visibility == Visibility.Visible)
                 Result = MessageBoxResult.No;
             else
-                Result = MessageBoxResult.OK; // Używamy OK dla domyślnego zamknięcia przy braku anuluj/nie
+                Result = MessageBoxResult.OK;
 
             Close();
         }

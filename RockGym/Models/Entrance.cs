@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -13,7 +13,6 @@ namespace RockGym.Models
         public TimeSpan? EndTime { get; set; }
         public TimeSpan? TimeSpent { get; set; }
 
-        // Relacja: Wejście należy do konkretnego użytkownika
         public virtual User? User { get; set; }
     }
 }

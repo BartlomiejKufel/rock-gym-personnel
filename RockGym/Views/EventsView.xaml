@@ -5,14 +5,609 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:RockGym.Views"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <Grid Background="#111622">
-        <TextBlock Text="WIDOK WYDARZEŃ (Zadanie w realizacji)" 
-                   Foreground="White" 
-                   FontSize="24" 
-                   FontWeight="Bold" 
-                   HorizontalAlignment="Center" 
-                   VerticalAlignment="Center"
-                   FontFamily="Segoe UI"/>
+             d:DesignHeight="600" d:DesignWidth="800">
+    
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+
+        <!-- Styl bazowy dla nagłówków w kolumnach -->
+        <Style x:Key="BaseHeaderStyle" TargetType="DataGridColumnHeader">
+            <Setter Property="Background" Value="#111622"/>
+            <Setter Property="Foreground" Value="#A0AEC0"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Padding" Value="12,12"/>
+            <Setter Property="BorderThickness" Value="0,0,0,1.5"/>
+            <Setter Property="BorderBrush" Value="#2D3748"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="FontSize" Value="12"/>
+        </Style>
+
+        <!-- Styl dla nagłówka kolumny "Akcje" -->
+        <Style x:Key="CenteredHeaderStyle" TargetType="DataGridColumnHeader" BasedOn="{StaticResource BaseHeaderStyle}">
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        </Style>
+        
+        <!-- Styl dla DataGrid -->
+        <Style x:Key="TableViewStyle" TargetType="DataGrid">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="GridLinesVisibility" Value="Horizontal"/>
+            <Setter Property="HorizontalGridLinesBrush" Value="#2D3748"/>
+            <Setter Property="HeadersVisibility" Value="Column"/>
+            <Setter Property="AutoGenerateColumns" Value="False"/>
+            <Setter Property="CanUserAddRows" Value="False"/>
+            <Setter Property="CanUserDeleteRows" Value="False"/>
+            <Setter Property="CanUserResizeRows" Value="False"/>
+            <Setter Property="CanUserSortColumns" Value="False"/>
+            <Setter Property="IsReadOnly" Value="True"/>
+            <Setter Property="RowBackground" Value="#1A1F26"/>
+            <Setter Property="AlternatingRowBackground" Value="#202732"/>
+            <Setter Property="ColumnHeaderStyle" Value="{StaticResource BaseHeaderStyle}"/>
+            <!-- Styl dla komórek -->
+            <Setter Property="CellStyle">
+                <Setter.Value>
+                    <Style TargetType="DataGridCell">
+                        <Setter Property="Foreground" Value="White"/>
+                        <Setter Property="Padding" Value="12,14"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="DataGridCell">
+                                    <Border Padding="{TemplateBinding Padding}" Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
+                                        <ContentPresenter SnapsToDevicePixels="True"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Background" Value="#252F3F"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Styl dla przycisków w tabeli -->
+        <Style x:Key="ActionButton" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Opacity" Value="0.8"/>
+                                <Setter Property="Cursor" Value="Hand"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Styl dla ComboBox -->
+        <Style x:Key="ModernComboBox" TargetType="ComboBox">
+            <Setter Property="Background" Value="#1A1F26"/>
+            <Setter Property="BorderBrush" Value="#2D3748"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="1.5"/>
+            <Setter Property="Padding" Value="10,6"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBox">
+                        <Grid>
+                            <ToggleButton x:Name="ToggleButton"
+                                          BorderBrush="{TemplateBinding BorderBrush}"
+                                          BorderThickness="{TemplateBinding BorderThickness}"
+                                          Background="{TemplateBinding Background}"
+                                          Focusable="false"
+                                          IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                          ClickMode="Press">
+                                <ToggleButton.Template>
+                                    <ControlTemplate TargetType="ToggleButton">
+                                        <Border x:Name="border"
+                                                CornerRadius="6"
+                                                Background="{TemplateBinding Background}"
+                                                BorderBrush="{TemplateBinding BorderBrush}"
+                                                BorderThickness="{TemplateBinding BorderThickness}">
+                                            <Grid HorizontalAlignment="Right" Width="30">
+                                                <TextBlock Text="▼" 
+                                                           Foreground="#88FFFFFF" 
+                                                           FontSize="8" 
+                                                           HorizontalAlignment="Center" 
+                                                           VerticalAlignment="Center"/>
+                                            </Grid>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="border" Property="BorderBrush" Value="#FF7F3F"/>
+                                            </Trigger>
+                                            <Trigger Property="IsChecked" Value="True">
+                                                <Setter TargetName="border" Property="BorderBrush" Value="#FF7F3F"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </ToggleButton.Template>
+                            </ToggleButton>
+                            
+                            <ContentPresenter x:Name="ContentSite"
+                                              IsHitTestVisible="False"
+                                              Content="{TemplateBinding SelectionBoxItem}"
+                                              ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                              ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
+                                              Margin="12,3,30,3"
+                                              VerticalAlignment="Center"
+                                              HorizontalAlignment="Left"/>
+                            
+                            <Popup x:Name="Popup"
+                                   Placement="Bottom"
+                                   IsOpen="{TemplateBinding IsDropDownOpen}"
+                                   AllowsTransparency="True"
+                                   Focusable="False"
+                                   PopupAnimation="Slide">
+                                <Grid x:Name="DropDown"
+                                      SnapsToDevicePixels="True"
+                                      MinWidth="{TemplateBinding ActualWidth}"
+                                      MaxHeight="{TemplateBinding MaxDropDownHeight}">
+                                    <Border x:Name="DropDownBorder"
+                                            Background="#1A1F26"
+                                            BorderBrush="#2D3748"
+                                            BorderThickness="1.5"
+                                            CornerRadius="6"
+                                            Margin="0,2,0,0">
+                                        <ScrollViewer Margin="4" SnapsToDevicePixels="True">
+                                            <ItemsPresenter KeyboardNavigation.DirectionalNavigation="Contained"/>
+                                        </ScrollViewer>
+                                    </Border>
+                                </Grid>
+                            </Popup>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="HasItems" Value="false">
+                                <Setter TargetName="DropDownBorder" Property="Height" Value="95"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Styl dla ComboBoxItem -->
+        <Style TargetType="ComboBoxItem">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Padding" Value="10,8"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBoxItem">
+                        <Border x:Name="border"
+                                CornerRadius="4"
+                                Background="{TemplateBinding Background}"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#2D3748"/>
+                                <Setter Property="Cursor" Value="Hand"/>
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#FF7F3F"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Styl dla TextBox szukaj -->
+        <Style x:Key="SearchTextBoxStyle" TargetType="TextBox">
+            <Setter Property="Background" Value="#1A1F26"/>
+            <Setter Property="BorderBrush" Value="#2D3748"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="CaretBrush" Value="#FF7F3F"/>
+            <Setter Property="SelectionBrush" Value="#4A5568"/>
+            <Setter Property="BorderThickness" Value="1.5"/>
+            <Setter Property="Padding" Value="10,0"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border x:Name="border"
+                                CornerRadius="6"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                Background="{TemplateBinding Background}"
+                                SnapsToDevicePixels="True">
+                            <ScrollViewer x:Name="PART_ContentHost" Focusable="False" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsFocused" Value="True">
+                                <Setter TargetName="border" Property="BorderBrush" Value="#FF7F3F"/>
+                                <Setter TargetName="border" Property="Background" Value="#252B36"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="BorderBrush" Value="#FF7F3F"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.Background>
+            <ImageBrush ImageSource="pack://application:,,,/Assets/main-wall.jpg" Stretch="UniformToFill"/>
+        </Grid.Background>
+
+        <Grid Background="#7F222529">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Panel górny -->
+            <Grid Grid.Row="0" Margin="20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <!-- Przycisk dodaj -->
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="20"/>
+                    <!-- Wyszukiwarka prowadzącego -->
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="20"/>
+                    <!-- Sortowanie -->
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0" 
+                           Text="Wydarzenia" 
+                           Foreground="White" 
+                           FontSize="22" 
+                           FontWeight="Bold" 
+                           VerticalAlignment="Center"
+                           FontFamily="Segoe UI"/>
+
+                <!-- Dodawanie tylko dla Admina (RoleId == 1) -->
+                <Button Grid.Column="2" 
+                        Content="DODAJ NOWE WYDARZENIE" 
+                        Command="{Binding AddEventCommand}"
+                        Visibility="{Binding IsAdmin, Converter={StaticResource BoolToVis}}"
+                        Background="#FF7F3F"
+                        Foreground="White"
+                        FontWeight="Bold"
+                        FontSize="12"
+                        Padding="18,10"
+                        BorderThickness="0"
+                        VerticalAlignment="Center">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border CornerRadius="6" Background="{TemplateBinding Background}">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="{TemplateBinding Padding}"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#FF945B"/>
+                                    <Setter Property="Cursor" Value="Hand"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+                <!-- Szukaj prowadzącego -->
+                <StackPanel Grid.Column="4" Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Text="Szukaj prowadzącego:" 
+                               Foreground="#88FFFFFF" 
+                               FontSize="12" 
+                               VerticalAlignment="Center" 
+                               Margin="0,0,8,0"
+                               FontFamily="Segoe UI"/>
+                    
+                    <TextBox Style="{StaticResource SearchTextBoxStyle}"
+                             Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                             Width="180" 
+                             Height="35"/>
+                </StackPanel>
+
+                <!-- Sortowanie -->
+                <StackPanel Grid.Column="6" Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Text="Sortuj:" 
+                               Foreground="#88FFFFFF" 
+                               FontSize="12" 
+                               VerticalAlignment="Center" 
+                               Margin="0,0,8,0"
+                               FontFamily="Segoe UI"/>
+                    
+                    <ComboBox Style="{StaticResource ModernComboBox}"
+                               ItemsSource="{Binding SortingOptions}" 
+                               SelectedItem="{Binding SelectedSortingOption}"
+                               Width="155" 
+                               Height="35"/>
+                </StackPanel>
+            </Grid>
+
+            <!-- Tabela danych -->
+            <Grid Grid.Row="1" Margin="20,0,20,20">
+                
+                <DataGrid ItemsSource="{Binding Events}" 
+                          Style="{StaticResource TableViewStyle}"
+                          RowDetailsVisibilityMode="VisibleWhenSelected"
+                          CanUserSortColumns="False"
+                          Visibility="{Binding ShowTable, Converter={StaticResource BoolToVis}}">
+                    <DataGrid.Columns>
+                        
+                        <!-- Data rozpoczęcia (Godzina pierwsza) -->
+                        <DataGridTextColumn Header="Data rozpoczęcia" 
+                                            Binding="{Binding StartDate, StringFormat=\{0:HH:mm dd.MM.yyyy r.\}}" 
+                                            Width="1.5*">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                    <Setter Property="FontFamily" Value="Segoe UI"/>
+                                    <Setter Property="FontSize" Value="13"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+
+                        <!-- Prowadzący ze zdjęciem i nazwą -->
+                        <DataGridTemplateColumn Header="Prowadzący" Width="2*">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                        <!-- Okrągły Avatar -->
+                                        <Grid Width="28" Height="28" Margin="0,0,10,0" VerticalAlignment="Center">
+                                            <!-- Fallback Silhouette -->
+                                            <Ellipse Fill="#2D3748"/>
+                                            <Path Data="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" 
+                                                  Fill="#A0AEC0" 
+                                                  Width="14" Height="14"
+                                                  Stretch="Uniform"
+                                                  HorizontalAlignment="Center" 
+                                                  VerticalAlignment="Center"/>
+                                            
+                                            <!-- Image Ellipse (clips correctly to circle) -->
+                                            <Ellipse Width="28" Height="28">
+                                                <Ellipse.Fill>
+                                                    <ImageBrush ImageSource="{Binding Instructor.ProfilePicture, Converter={StaticResource ByteToImageConverter}}" Stretch="UniformToFill"/>
+                                                </Ellipse.Fill>
+                                                <Ellipse.Style>
+                                                    <Style TargetType="Ellipse">
+                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding Instructor.ProfilePicture}" Value="{x:Null}">
+                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Ellipse.Style>
+                                            </Ellipse>
+                                        </Grid>
+                                        <!-- Imię i nazwisko prowadzącego -->
+                                        <TextBlock VerticalAlignment="Center" FontFamily="Segoe UI" FontSize="13">
+                                            <TextBlock.Text>
+                                                <MultiBinding StringFormat="{}{0} {1}">
+                                                    <Binding Path="Instructor.Name"/>
+                                                    <Binding Path="Instructor.Surname"/>
+                                                </MultiBinding>
+                                            </TextBlock.Text>
+                                        </TextBlock>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <!-- Nazwa -->
+                        <DataGridTextColumn Header="Nazwa" 
+                                            Binding="{Binding Name}" 
+                                            Width="2*">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="TextWrapping" Value="Wrap"/>
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                    <Setter Property="FontFamily" Value="Segoe UI"/>
+                                    <Setter Property="FontSize" Value="13"/>
+                                    <Setter Property="FontWeight" Value="SemiBold"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+
+                        <!-- Opis -->
+                        <DataGridTextColumn Header="Opis" 
+                                            Binding="{Binding Description}" 
+                                            Width="2.5*">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="TextWrapping" Value="Wrap"/>
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                    <Setter Property="FontFamily" Value="Segoe UI"/>
+                                    <Setter Property="FontSize" Value="13"/>
+                                    <Setter Property="Foreground" Value="#CCD0D6"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+
+                        <!-- Uczestnicy -->
+                        <DataGridTextColumn Header="Uczestnicy" 
+                                            Binding="{Binding ParticipantsRatio}" 
+                                            Width="1*">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                    <Setter Property="FontFamily" Value="Segoe UI"/>
+                                    <Setter Property="FontSize" Value="13"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+
+                        <!-- Data końca (Godzina pierwsza) -->
+                        <DataGridTextColumn Header="Data końca" 
+                                            Binding="{Binding EndDate, StringFormat=\{0:HH:mm dd.MM.yyyy r.\}}" 
+                                            Width="1.5*">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                    <Setter Property="FontFamily" Value="Segoe UI"/>
+                                    <Setter Property="FontSize" Value="13"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+
+                        <!-- Akcje (Edycja dla wszystkich, Usuwanie tylko dla Admina) -->
+                        <DataGridTemplateColumn Header="Akcje" Width="1.2*" HeaderStyle="{StaticResource CenteredHeaderStyle}">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                        <!-- Edycja ołówkiem -->
+                                        <Button Style="{StaticResource ActionButton}" 
+                                                Content="✏" 
+                                                Foreground="#FF7F3F" 
+                                                ToolTip="Edytuj wydarzenie"
+                                                Command="{Binding DataContext.EditEventCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                CommandParameter="{Binding}"
+                                                Margin="0,0,15,0"/>
+                                        
+                                        <!-- Usuwanie koszem (dostępne tylko dla Admina) -->
+                                        <Button Style="{StaticResource ActionButton}" 
+                                                Content="🗑" 
+                                                Foreground="#FF5B5B" 
+                                                ToolTip="Usuń wydarzenie"
+                                                Visibility="{Binding DataContext.IsAdmin, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource BoolToVis}}"
+                                                Command="{Binding DataContext.DeleteEventCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                CommandParameter="{Binding}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+
+                    <!-- Rozwijane szczegóły wiersza (Lista uczestników ze zdjęciami) -->
+                    <DataGrid.RowDetailsTemplate>
+                        <DataTemplate>
+                            <Border Background="#1A1F26" BorderThickness="0,1,0,1" BorderBrush="#2D3748" Padding="15">
+                                <StackPanel>
+                                    <TextBlock Text="Zapisani uczestnicy:" 
+                                               Foreground="#FF7F3F" 
+                                               FontWeight="Bold" 
+                                               FontSize="12" 
+                                               Margin="0,0,0,10"
+                                               FontFamily="Segoe UI"/>
+                                    
+                                    <!-- ItemsControl prezentujący listę -->
+                                    <ItemsControl ItemsSource="{Binding EventParticipants}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Border Padding="8,6" Margin="0,2" Background="#202732" CornerRadius="4" HorizontalAlignment="Left" MinWidth="250">
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                            <ColumnDefinition Width="*"/>
+                                                        </Grid.ColumnDefinitions>
+                                                        
+                                                        <!-- Zdjęcie uczestnika -->
+                                                        <Grid Grid.Column="0" Width="24" Height="24" Margin="0,0,10,0" VerticalAlignment="Center">
+                                                            <!-- Fallback Silhouette -->
+                                                            <Ellipse Fill="#2D3748"/>
+                                                            <Path Data="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" 
+                                                                  Fill="#A0AEC0" 
+                                                                  Width="12" Height="12"
+                                                                  Stretch="Uniform"
+                                                                  HorizontalAlignment="Center" 
+                                                                  VerticalAlignment="Center"/>
+                                                            
+                                                            <!-- Image Ellipse (clips correctly to circle) -->
+                                                            <Ellipse Width="24" Height="24">
+                                                                <Ellipse.Fill>
+                                                                    <ImageBrush ImageSource="{Binding Participant.ProfilePicture, Converter={StaticResource ByteToImageConverter}}" Stretch="UniformToFill"/>
+                                                                </Ellipse.Fill>
+                                                                <Ellipse.Style>
+                                                                    <Style TargetType="Ellipse">
+                                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                                        <Style.Triggers>
+                                                                            <DataTrigger Binding="{Binding Participant.ProfilePicture}" Value="{x:Null}">
+                                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                                            </DataTrigger>
+                                                                        </Style.Triggers>
+                                                                    </Style>
+                                                                </Ellipse.Style>
+                                                            </Ellipse>
+                                                        </Grid>
+                                                        
+                                                        <!-- Imię i Nazwisko -->
+                                                        <TextBlock Grid.Column="1" 
+                                                                   Text="{Binding Participant.FullName}" 
+                                                                   Foreground="White" 
+                                                                   FontWeight="SemiBold" 
+                                                                   FontSize="12"
+                                                                   VerticalAlignment="Center"
+                                                                   FontFamily="Segoe UI"/>
+                                                    </Grid>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                    
+                                    <!-- Informacja o braku zapisanych osób -->
+                                    <TextBlock Text="Brak zapisanych uczestników na to wydarzenie." 
+                                               Foreground="#88FFFFFF" 
+                                               FontSize="12" 
+                                               FontStyle="Italic"
+                                               FontFamily="Segoe UI"
+                                               Margin="5,0,0,0">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding EventParticipants.Count}" Value="0">
+                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </DataGrid.RowDetailsTemplate>
+                </DataGrid>
+
+                <!-- Karta informacji przy braku wydarzeń -->
+                <Grid Visibility="{Binding IsEmpty, Converter={StaticResource BoolToVis}}">
+                    <Border CornerRadius="8" Background="#1A1F26" BorderThickness="1.5" BorderBrush="#2D3748" Padding="40" VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <StackPanel HorizontalAlignment="Center">
+                            <TextBlock Text="Brak wydarzeń" 
+                                       Foreground="White" 
+                                       FontSize="18" 
+                                       FontWeight="Bold" 
+                                       HorizontalAlignment="Center"
+                                       FontFamily="Segoe UI"/>
+                            
+                            <TextBlock Text="Użyj przycisku u góry, aby dodać pierwsze wydarzenie." 
+                                       Foreground="#88FFFFFF" 
+                                       FontSize="12" 
+                                       HorizontalAlignment="Center" 
+                                       Margin="0,8,0,0"
+                                       FontFamily="Segoe UI"/>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </Grid>
+        </Grid>
     </Grid>
 </UserControl>

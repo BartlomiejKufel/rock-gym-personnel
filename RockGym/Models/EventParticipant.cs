@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -10,7 +10,6 @@ namespace RockGym.Models
         public ulong ParticipantId { get; set; }
         public DateTime DateOfRegistration { get; set; }
 
-        // Właściwości nawigacyjne
         public virtual Event? Event { get; set; }
         public virtual User? Participant { get; set; }
     }

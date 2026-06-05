@@ -4,7 +4,6 @@ using RockGym.Views;
 
 namespace RockGym.Services
 {
-    // Zedytowana klasa CustomMessageBox, która obsługuje wyświetlanie niestandardowego okna dialogowego z różnymi opcjami
     public static class CustomMessageBox
     {
         public static MessageBoxResult Show(string messageBoxText)

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -16,8 +16,9 @@ namespace RockGym.Models
         public byte[]? ProfilePicture { get; set; }
         public ulong RoleId { get; set; }
 
+        public string FullName => $"{Name} {Surname}";
 
-        // Właściwości nawigacyjne
+
         public virtual Role? Role { get; set; }
         public virtual ICollection<Entrance> Entrances { get; set; } = new List<Entrance>();
         public virtual ICollection<QrCard> QrCards { get; set; } = new List<QrCard>();

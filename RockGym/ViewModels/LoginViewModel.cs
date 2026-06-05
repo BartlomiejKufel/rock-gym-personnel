@@ -39,7 +39,6 @@ namespace RockGym.ViewModels
             LoginCommand = new RelayCommand(ExecuteLogin, CanExecuteLogin);
         }
 
-        // Przycisk logowania jest aktywny, gdy wpisano nazwę użytkownika
         private bool CanExecuteLogin(object? parameter)
         {
             return !string.IsNullOrWhiteSpace(Login);
@@ -73,7 +72,6 @@ namespace RockGym.ViewModels
             {
                 using (var context = new RockGym.Services.RockGymContext())
                 {
-                    // Wyszukiwanie użytkownika w bazie danych po loginie
                     var user = context.Users.FirstOrDefault(u => u.Login == Login);
 
                     if (user == null)
@@ -82,14 +80,12 @@ namespace RockGym.ViewModels
                         return;
                     }
 
-                    // Weryfikacja hasła za pomocą BCrypt
                     if (!BCrypt.Net.BCrypt.Verify(enteredPassword, user.Password))
                     {
                         ErrorMessage = "Błędne hasło.";
                         return;
                     }
 
-                    // Weryfikacja roli (role_id = 1 (np. admin) lub role_id = 2 (np. pracownik))
                     if (user.RoleId != 1 && user.RoleId != 2)
                     {
                         ErrorMessage = "Dany użytkownik nie jest pracownikiem.";

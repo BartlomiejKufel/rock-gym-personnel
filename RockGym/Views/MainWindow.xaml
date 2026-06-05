@@ -10,6 +10,8 @@
         Title="Rock Gym - Panel Zarządzania" 
         Height="768" 
         Width="1024"
+        MinWidth="1024"
+        MinHeight="720"
         WindowState="Maximized">
 
     <Window.Resources>

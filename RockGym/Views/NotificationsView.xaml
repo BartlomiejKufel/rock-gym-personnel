@@ -38,6 +38,7 @@
             <Setter Property="CanUserAddRows" Value="False"/>
             <Setter Property="CanUserDeleteRows" Value="False"/>
             <Setter Property="CanUserResizeRows" Value="False"/>
+            <Setter Property="CanUserSortColumns" Value="False"/>
             <Setter Property="IsReadOnly" Value="True"/>
             <Setter Property="RowBackground" Value="#1A1F26"/>
             <Setter Property="AlternatingRowBackground" Value="#202732"/>

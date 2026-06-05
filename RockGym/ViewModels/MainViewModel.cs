@@ -56,26 +56,22 @@ namespace RockGym.ViewModels
 
         private void ShowCustomers()
         {
-            // Placeholder dla widoku Klientów
-            CurrentViewModel = new CustomersViewModel();
+            CurrentViewModel = new CustomersViewModel(_currentUser);
         }
 
         private void ShowTransactions()
         {
-            // Placeholder dla widoku Transakcji
-            CurrentViewModel = new TransactionsViewModel();
+            CurrentViewModel = new TransactionsViewModel(_currentUser);
         }
 
         private void ShowOffers()
         {
-            // Placeholder dla widoku Ofert
-            CurrentViewModel = new OffersViewModel();
+            CurrentViewModel = new OffersViewModel(_currentUser);
         }
 
         private void ShowEvents()
         {
-            // Placeholder dla widoku Wydarzeń
-            CurrentViewModel = new EventsViewModel();
+            CurrentViewModel = new EventsViewModel(_currentUser);
         }
 
         private void ShowNotifications()
@@ -85,7 +81,6 @@ namespace RockGym.ViewModels
 
         private void ShowEmployees()
         {
-            // Placeholder dla widoku Pracowników
             CurrentViewModel = new EmployeesViewModel();
         }
 
@@ -106,10 +101,5 @@ namespace RockGym.ViewModels
         }
     }
 
-    // Proste klasy placeholderów dla podwidoków, aby aplikacja mogła się skompilować i obsłużyć powiązania
-    public class CustomersViewModel : ViewModelBase { }
-    public class TransactionsViewModel : ViewModelBase { }
-    public class OffersViewModel : ViewModelBase { }
-    public class EventsViewModel : ViewModelBase { }
     public class EmployeesViewModel : ViewModelBase { }
 }

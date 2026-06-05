@@ -5,14 +5,242 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:RockGym.Views"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <Grid Background="#111622">
-        <TextBlock Text="WIDOK OFERT (Zadanie w realizacji)" 
-                   Foreground="White" 
-                   FontSize="24" 
-                   FontWeight="Bold" 
-                   HorizontalAlignment="Center" 
-                   VerticalAlignment="Center"
-                   FontFamily="Segoe UI"/>
+             d:DesignHeight="600" d:DesignWidth="800"
+             Loaded="UserControl_Loaded">
+    
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+
+        <!-- Styl bazowy dla nagłówków w kolumnach -->
+        <Style x:Key="BaseHeaderStyle" TargetType="DataGridColumnHeader">
+            <Setter Property="Background" Value="#111622"/>
+            <Setter Property="Foreground" Value="#A0AEC0"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Padding" Value="12,12"/>
+            <Setter Property="BorderThickness" Value="0,0,0,1.5"/>
+            <Setter Property="BorderBrush" Value="#2D3748"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="FontSize" Value="12"/>
+        </Style>
+
+        <!-- Styl dla nagłówka kolumny "Akcje" -->
+        <Style x:Key="CenteredHeaderStyle" TargetType="DataGridColumnHeader" BasedOn="{StaticResource BaseHeaderStyle}">
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        </Style>
+        
+        <!-- Styl dla DataGrid -->
+        <Style x:Key="TableViewStyle" TargetType="DataGrid">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="GridLinesVisibility" Value="Horizontal"/>
+            <Setter Property="HorizontalGridLinesBrush" Value="#2D3748"/>
+            <Setter Property="HeadersVisibility" Value="Column"/>
+            <Setter Property="AutoGenerateColumns" Value="False"/>
+            <Setter Property="CanUserAddRows" Value="False"/>
+            <Setter Property="CanUserDeleteRows" Value="False"/>
+            <Setter Property="CanUserResizeRows" Value="False"/>
+            <Setter Property="CanUserSortColumns" Value="False"/>
+            <Setter Property="IsReadOnly" Value="True"/>
+            <Setter Property="RowBackground" Value="#1A1F26"/>
+            <Setter Property="AlternatingRowBackground" Value="#202732"/>
+            <Setter Property="ColumnHeaderStyle" Value="{StaticResource BaseHeaderStyle}"/>
+            <!-- Styl dla komórek -->
+            <Setter Property="CellStyle">
+                <Setter.Value>
+                    <Style TargetType="DataGridCell">
+                        <Setter Property="Foreground" Value="White"/>
+                        <Setter Property="Padding" Value="12,14"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="DataGridCell">
+                                    <Border Padding="{TemplateBinding Padding}" Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
+                                        <ContentPresenter SnapsToDevicePixels="True"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Background" Value="#252F3F"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Styl dla przycisków w tabeli -->
+        <Style x:Key="ActionButton" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Opacity" Value="0.8"/>
+                                <Setter Property="Cursor" Value="Hand"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.Background>
+            <ImageBrush ImageSource="pack://application:,,,/Assets/main-wall.jpg" Stretch="UniformToFill"/>
+        </Grid.Background>
+
+        <Grid Background="#7F222529">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Nagłówek i przycisk dodawania (widoczny tylko dla admina) -->
+            <Grid Grid.Row="0" Margin="20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0" 
+                           Text="Oferty" 
+                           Foreground="White" 
+                           FontSize="22" 
+                           FontWeight="Bold" 
+                           VerticalAlignment="Center"
+                           FontFamily="Segoe UI"/>
+
+                <Button Grid.Column="2" 
+                        Content="DODAJ NOWĄ OFERTĘ" 
+                        Command="{Binding AddOfferCommand}"
+                        Visibility="{Binding IsAdmin, Converter={StaticResource BoolToVis}}"
+                        Background="#FF7F3F"
+                        Foreground="White"
+                        FontWeight="Bold"
+                        FontSize="12"
+                        Padding="18,10"
+                        BorderThickness="0"
+                        VerticalAlignment="Center">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border CornerRadius="6" Background="{TemplateBinding Background}">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="{TemplateBinding Padding}"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#FF945B"/>
+                                    <Setter Property="Cursor" Value="Hand"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+            </Grid>
+
+            <!-- Główna zawartość: Tabela / Komunikat o braku rekordów -->
+            <Grid Grid.Row="1" Margin="20,0,20,20">
+                
+                <DataGrid x:Name="OffersDataGrid"
+                          ItemsSource="{Binding Offers}" 
+                          Style="{StaticResource TableViewStyle}"
+                          Visibility="{Binding ShowTable, Converter={StaticResource BoolToVis}}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Nazwa oferty" 
+                                            Binding="{Binding Name}" 
+                                            Width="3*">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="TextWrapping" Value="Wrap"/>
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                    <Setter Property="FontFamily" Value="Segoe UI"/>
+                                    <Setter Property="FontSize" Value="13"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+
+                        <DataGridTextColumn Header="Cena" 
+                                            Binding="{Binding Price, StringFormat=\{0:N2\} zł}" 
+                                            Width="1.5*">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                    <Setter Property="FontFamily" Value="Segoe UI"/>
+                                    <Setter Property="FontSize" Value="13"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+
+                        <DataGridTextColumn Header="Czas trwania" 
+                                            Binding="{Binding Duration, StringFormat=\{0\} dni}" 
+                                            Width="1.5*">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                    <Setter Property="FontFamily" Value="Segoe UI"/>
+                                    <Setter Property="FontSize" Value="13"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+
+                        <!-- Kolumna akcji (Edycja/Usuwanie) sterowana w code-behind (ukrywana dla nie-adminów) -->
+                        <DataGridTemplateColumn x:Name="ActionsColumn" Header="Akcje" Width="1.2*" HeaderStyle="{StaticResource CenteredHeaderStyle}">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                        <Button Style="{StaticResource ActionButton}" 
+                                                Content="✏" 
+                                                Foreground="#FF7F3F" 
+                                                ToolTip="Edytuj ofertę"
+                                                Command="{Binding DataContext.EditOfferCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                CommandParameter="{Binding}"
+                                                Margin="0,0,15,0"/>
+                                        
+                                        <Button Style="{StaticResource ActionButton}" 
+                                                Content="🗑" 
+                                                Foreground="#FF5B5B" 
+                                                ToolTip="Usuń ofertę"
+                                                Command="{Binding DataContext.DeleteOfferCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                CommandParameter="{Binding}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+
+                <!-- Karta informacji przy braku ofert -->
+                <Grid Visibility="{Binding IsEmpty, Converter={StaticResource BoolToVis}}">
+                    <Border CornerRadius="8" Background="#1A1F26" BorderThickness="1.5" BorderBrush="#2D3748" Padding="40" VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <StackPanel HorizontalAlignment="Center">
+                            <TextBlock Text="Brak ofert" 
+                                       Foreground="White" 
+                                       FontSize="18" 
+                                       FontWeight="Bold" 
+                                       HorizontalAlignment="Center"
+                                       FontFamily="Segoe UI"/>
+                            
+                            <TextBlock x:Name="InstructionsTextBlock"
+                                       Text="Poczekaj na dodanie ofert przez administratora." 
+                                       Foreground="#88FFFFFF" 
+                                       FontSize="12" 
+                                       HorizontalAlignment="Center" 
+                                       Margin="0,8,0,0"
+                                       FontFamily="Segoe UI"/>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </Grid>
+        </Grid>
     </Grid>
 </UserControl>

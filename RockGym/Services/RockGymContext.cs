@@ -19,10 +19,8 @@ namespace RockGym.Services
         {
             if (!optionsBuilder.IsConfigured)
             {
-                // Zastąp poniższy string parametrami swojej lokalnej bazy danych XAMPP
                 string connectionString = "server=127.0.0.1;port=3306;database=rock_gym;user=root;password=";
 
-                // Wymaga zainstalowania pakietu NuGet: Pomelo.EntityFrameworkCore.MySql
                 optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
             }
         }
@@ -122,7 +120,6 @@ namespace RockGym.Services
                     .OnDelete(DeleteBehavior.SetNull);
             });
 
-            // Pozostałe tabele (uproszczone)
             modelBuilder.Entity<Offer>(entity =>
             {
                 entity.ToTable("offers").HasKey(e => e.OfferId);

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -16,10 +16,10 @@ namespace RockGym.Models
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
 
-
-        // Właściwości nawigacyjne
         public virtual User? Instructor { get; set; }
         public virtual Offer? Offer { get; set; }
         public virtual ICollection<EventParticipant> EventParticipants { get; set; } = new List<EventParticipant>();
+
+        public string ParticipantsRatio => $"{EventParticipants?.Count ?? 0}/{ParticipantsLimit}";
     }
 }
