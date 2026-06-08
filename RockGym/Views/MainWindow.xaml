@@ -34,8 +34,8 @@
         <DataTemplate DataType="{x:Type vm:NotificationsViewModel}">
             <views:NotificationsView/>
         </DataTemplate>
-        <DataTemplate DataType="{x:Type vm:EmployeesViewModel}">
-            <views:EmployeesView/>
+        <DataTemplate DataType="{x:Type vm:SummaryViewModel}">
+            <views:SummaryView/>
         </DataTemplate>
 
         <!-- Style dla przycisków w menu bocznym (Nawigacja) -->
@@ -175,8 +175,8 @@
                         Margin="0,2,0,0"/>
 
                 <Button Style="{StaticResource SidebarButton}" 
-                        Content="PRACOWNICY" 
-                        Command="{Binding ShowEmployeesCommand}"
+                        Content="PODSUMOWANIE" 
+                        Command="{Binding ShowSummaryCommand}"
                         Visibility="{Binding IsAdmin, Converter={StaticResource BoolToVis}}"
                         Margin="0,2,0,0"/>
             </StackPanel>

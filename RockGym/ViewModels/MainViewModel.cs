@@ -37,7 +37,7 @@ namespace RockGym.ViewModels
         public ICommand ShowOffersCommand { get; }
         public ICommand ShowEventsCommand { get; }
         public ICommand ShowNotificationsCommand { get; }
-        public ICommand ShowEmployeesCommand { get; }
+        public ICommand ShowSummaryCommand { get; }
         public ICommand LogoutCommand { get; }
 
         public MainViewModel(User user)
@@ -50,7 +50,7 @@ namespace RockGym.ViewModels
             ShowOffersCommand = new RelayCommand(o => ShowOffers());
             ShowEventsCommand = new RelayCommand(o => ShowEvents());
             ShowNotificationsCommand = new RelayCommand(o => ShowNotifications());
-            ShowEmployeesCommand = new RelayCommand(o => ShowEmployees());
+            ShowSummaryCommand = new RelayCommand(o => ShowSummary());
             LogoutCommand = new RelayCommand(ExecuteLogout);
         }
 
@@ -79,9 +79,9 @@ namespace RockGym.ViewModels
             CurrentViewModel = new NotificationsViewModel(_currentUser);
         }
 
-        private void ShowEmployees()
+        private void ShowSummary()
         {
-            CurrentViewModel = new EmployeesViewModel();
+            CurrentViewModel = new SummaryViewModel();
         }
 
         private void ExecuteLogout(object? parameter)
@@ -101,5 +101,4 @@ namespace RockGym.ViewModels
         }
     }
 
-    public class EmployeesViewModel : ViewModelBase { }
 }

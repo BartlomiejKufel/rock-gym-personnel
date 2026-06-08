@@ -137,8 +137,7 @@
                                                    FontFamily="{TemplateBinding FontFamily}"
                                                    CaretBrush="#FF7F3F"
                                                    SelectionBrush="#4A5568"/>
-
-                                <!-- Przycisk kalendarza -->
+                                 <!-- Przycisk kalendarza -->
                                 <Button x:Name="PART_Button"
                                         Grid.Column="1"
                                         Width="30"
@@ -159,6 +158,13 @@
                                         </ControlTemplate>
                                     </Button.Template>
                                 </Button>
+
+                                <!-- Popup do wysuwania kalendarza -->
+                                <Popup x:Name="PART_Popup"
+                                       AllowsTransparency="True"
+                                       Placement="Bottom"
+                                       PlacementTarget="{Binding ElementName=border}"
+                                       StaysOpen="False"/>
                             </Grid>
                         </Border>
                         <ControlTemplate.Triggers>

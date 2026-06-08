@@ -1,0 +1,489 @@
+<UserControl x:Class="RockGym.Views.SummaryView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:RockGym.Views"
+             xmlns:services="clr-namespace:RockGym.Services"
+             mc:Ignorable="d" 
+             d:DesignHeight="700" d:DesignWidth="900">
+    
+    <UserControl.Resources>
+        <services:ByteToImageConverter x:Key="ByteToImageConverter"/>
+
+        <!-- Styl dla DatePicker -->
+        <Style x:Key="DialogDatePicker" TargetType="DatePicker">
+            <Setter Property="Background" Value="#1A1F26"/>
+            <Setter Property="BorderBrush" Value="#2D3748"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="1.5"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="Height" Value="35"/>
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="DatePicker">
+                        <Border x:Name="border"
+                                CornerRadius="6"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                Background="{TemplateBinding Background}"
+                                SnapsToDevicePixels="True">
+                            <Grid x:Name="PART_Root" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- Pole tekstowe -->
+                                <DatePickerTextBox x:Name="PART_TextBox"
+                                                   Grid.Column="0"
+                                                   Focusable="{TemplateBinding Focusable}"
+                                                   HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                   VerticalContentAlignment="Center"
+                                                   Background="Transparent"
+                                                   BorderThickness="0"
+                                                   Foreground="{TemplateBinding Foreground}"
+                                                   Padding="10,0"
+                                                   FontSize="{TemplateBinding FontSize}"
+                                                   FontFamily="{TemplateBinding FontFamily}"
+                                                   CaretBrush="#FF7F3F"
+                                                   SelectionBrush="#4A5568"/>
+
+                                 <!-- Przycisk kalendarza -->
+                                <Button x:Name="PART_Button"
+                                        Grid.Column="1"
+                                        Width="30"
+                                        Margin="0,0,5,0"
+                                        VerticalAlignment="Center"
+                                        Focusable="False"
+                                        Background="Transparent"
+                                        BorderThickness="0"
+                                        Content="📅"
+                                        Foreground="#FF7F3F"
+                                        FontSize="16"
+                                        Cursor="Hand">
+                                    <Button.Template>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border Background="Transparent">
+                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Button.Template>
+                                </Button>
+
+                                <!-- Popup do wysuwania kalendarza -->
+                                <Popup x:Name="PART_Popup"
+                                       AllowsTransparency="True"
+                                       Placement="Bottom"
+                                       PlacementTarget="{Binding ElementName=border}"
+                                       StaysOpen="False"/>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="BorderBrush" Value="#FF7F3F"/>
+                            </Trigger>
+                            <Trigger Property="IsKeyboardFocusWithin" Value="True">
+                                <Setter TargetName="border" Property="BorderBrush" Value="#FF7F3F"/>
+                                <Setter TargetName="border" Property="Background" Value="#252B36"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Resources>
+                <Style TargetType="DatePickerTextBox">
+                    <Setter Property="Background" Value="Transparent"/>
+                    <Setter Property="BorderThickness" Value="0"/>
+                    <Setter Property="Foreground" Value="White"/>
+                    <Setter Property="CaretBrush" Value="#FF7F3F"/>
+                    <Setter Property="SelectionBrush" Value="#4A5568"/>
+                    <Setter Property="Padding" Value="10,0"/>
+                    <Setter Property="VerticalContentAlignment" Value="Center"/>
+                </Style>
+            </Style.Resources>
+        </Style>
+
+        <!-- Styl dla przycisku pobierania wyciągów -->
+        <Style x:Key="DownloadButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#FF7F3F"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="15,8"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="Height" Value="32"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border"
+                                CornerRadius="6"
+                                Background="{TemplateBinding Background}"
+                                Padding="{TemplateBinding Padding}">
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <TextBlock Text="📥" Margin="0,0,6,0" FontSize="12" VerticalAlignment="Center"/>
+                                <ContentPresenter VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#FF945B"/>
+                                <Setter Property="Cursor" Value="Hand"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Background" Value="#4A5568"/>
+                                <Setter Property="Foreground" Value="#A0AEC0"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Styl bazowy dla nagłówków w kolumnach -->
+        <Style x:Key="BaseHeaderStyle" TargetType="DataGridColumnHeader">
+            <Setter Property="Background" Value="#111622"/>
+            <Setter Property="Foreground" Value="#A0AEC0"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Padding" Value="12,12"/>
+            <Setter Property="BorderThickness" Value="0,0,0,1.5"/>
+            <Setter Property="BorderBrush" Value="#2D3748"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="FontSize" Value="12"/>
+        </Style>
+
+        <!-- Styl dla DataGrid -->
+        <Style x:Key="TableViewStyle" TargetType="DataGrid">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="GridLinesVisibility" Value="Horizontal"/>
+            <Setter Property="HorizontalGridLinesBrush" Value="#2D3748"/>
+            <Setter Property="HeadersVisibility" Value="Column"/>
+            <Setter Property="AutoGenerateColumns" Value="False"/>
+            <Setter Property="CanUserAddRows" Value="False"/>
+            <Setter Property="CanUserDeleteRows" Value="False"/>
+            <Setter Property="CanUserResizeRows" Value="False"/>
+            <Setter Property="CanUserSortColumns" Value="False"/>
+            <Setter Property="IsReadOnly" Value="True"/>
+            <Setter Property="RowBackground" Value="#1A1F26"/>
+            <Setter Property="AlternatingRowBackground" Value="#202732"/>
+            <Setter Property="ColumnHeaderStyle" Value="{StaticResource BaseHeaderStyle}"/>
+            <Setter Property="CellStyle">
+                <Setter.Value>
+                    <Style TargetType="DataGridCell">
+                        <Setter Property="Foreground" Value="White"/>
+                        <Setter Property="Padding" Value="12,14"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="DataGridCell">
+                                    <Border Padding="{TemplateBinding Padding}" Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
+                                        <ContentPresenter SnapsToDevicePixels="True"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Background" Value="#252F3F"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid>
+        <!-- Tło z przyciemnioną ścianką wspinaczkową (tak jak na innych widokach) -->
+        <Grid.Background>
+            <ImageBrush ImageSource="pack://application:,,,/Assets/main-wall.jpg" Stretch="UniformToFill"/>
+        </Grid.Background>
+
+        <Grid Background="#7F222529">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- 1. Nagłówek panelu z DatePickerem -->
+            <Grid Grid.Row="0" Margin="20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0" 
+                           Text="Podsumowanie" 
+                           Foreground="White" 
+                           FontSize="22" 
+                           FontWeight="Bold" 
+                           VerticalAlignment="Center"
+                           FontFamily="Segoe UI"/>
+
+                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Text="Wybierz datę:" 
+                               Foreground="#88FFFFFF" 
+                               FontSize="13" 
+                               VerticalAlignment="Center" 
+                               Margin="0,0,10,0"
+                               FontFamily="Segoe UI"/>
+                    
+                    <DatePicker Style="{StaticResource DialogDatePicker}" 
+                                SelectedDate="{Binding SelectedDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                DisplayDateEnd="{Binding MaxDate, Mode=OneWay}"
+                                Width="160" 
+                                Height="35"/>
+                </StackPanel>
+            </Grid>
+
+            <!-- 2. Zawartość Dashboardu w ScrollViewerze -->
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="20,0,20,20">
+                <StackPanel>
+                    
+                    <!-- SEKCJA: STATYSTYKI Z WYBRANEGO DNIA -->
+                    <TextBlock Text="{Binding SelectedDayName, StringFormat='Podsumowanie dnia ({0})'}" 
+                               Foreground="#FF7F3F" 
+                               FontSize="16" 
+                               FontWeight="Bold" 
+                               FontFamily="Segoe UI" 
+                               Margin="0,0,0,12"/>
+                    
+                    <Grid Margin="0,0,0,25">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="15"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="15"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="15"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Karta 1: Dzisiejszy utarg -->
+                        <Border Grid.Column="0" Background="#1A1F26" BorderBrush="#2D3748" BorderThickness="1.5" CornerRadius="8" Padding="18,15">
+                            <StackPanel>
+                                <TextBlock Text="UTARG Z WYBRANEGO DNIA" FontSize="10" Foreground="#88FFFFFF" FontWeight="Bold" FontFamily="Segoe UI"/>
+                                <TextBlock Text="{Binding FormattedTodayRevenue}" FontSize="20" Foreground="#FF7F3F" FontWeight="Bold" FontFamily="Segoe UI" Margin="0,6,0,0"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Karta 2: Liczba transakcji dzisiaj -->
+                        <Border Grid.Column="2" Background="#1A1F26" BorderBrush="#2D3748" BorderThickness="1.5" CornerRadius="8" Padding="18,15">
+                            <StackPanel>
+                                <TextBlock Text="LICZBA TRANSAKCJI" FontSize="10" Foreground="#88FFFFFF" FontWeight="Bold" FontFamily="Segoe UI"/>
+                                <TextBlock Text="{Binding TodayTransactionsCount}" FontSize="20" Foreground="White" FontWeight="Bold" FontFamily="Segoe UI" Margin="0,6,0,0"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Karta 3: Dzisiejsze wejścia -->
+                        <Border Grid.Column="4" Background="#1A1F26" BorderBrush="#2D3748" BorderThickness="1.5" CornerRadius="8" Padding="18,15">
+                            <StackPanel>
+                                <TextBlock Text="WEJŚCIA Z WYBRANEGO DNIA" FontSize="10" Foreground="#88FFFFFF" FontWeight="Bold" FontFamily="Segoe UI"/>
+                                <TextBlock Text="{Binding TodayEntriesCount}" FontSize="20" Foreground="White" FontWeight="Bold" FontFamily="Segoe UI" Margin="0,6,0,0"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Karta 4: Osoby obecnie w klubie -->
+                        <Border Grid.Column="6" Background="#1A1F26" BorderBrush="#2D3748" BorderThickness="1.5" CornerRadius="8" Padding="18,15">
+                            <StackPanel>
+                                <TextBlock Text="OBECNI W WYBRANYM DNIU" FontSize="10" Foreground="#88FFFFFF" FontWeight="Bold" FontFamily="Segoe UI"/>
+                                <TextBlock Text="{Binding ActiveGymLoad}" FontSize="20" Foreground="#48BB78" FontWeight="Bold" FontFamily="Segoe UI" Margin="0,6,0,0"/>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+
+                    <!-- SEKCJA: PODSUMOWANIE MIESIĄCA -->
+                    <Grid Margin="0,0,0,12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <TextBlock Grid.Column="0"
+                                   Text="{Binding SelectedMonthYearName, StringFormat='Podsumowanie miesiąca ({0})'}" 
+                                   Foreground="#FF7F3F" 
+                                   FontSize="16" 
+                                   FontWeight="Bold" 
+                                   FontFamily="Segoe UI" 
+                                   VerticalAlignment="Center"/>
+                        
+                        <Button Grid.Column="1"
+                                Content="Pobierz wyciągi" 
+                                Command="{Binding DownloadMonthlyTransactionsCommand}"
+                                Style="{StaticResource DownloadButtonStyle}"
+                                VerticalAlignment="Center"/>
+                    </Grid>
+
+                    <Grid Margin="0,0,0,25">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="15"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="15"/>
+                            <ColumnDefinition Width="1.5*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Karta 1: Utarg w tym miesiącu -->
+                        <Border Grid.Column="0" Background="#1A1F26" BorderBrush="#2D3748" BorderThickness="1.5" CornerRadius="8" Padding="18,15">
+                            <StackPanel>
+                                <TextBlock Text="UTARG W TYM MIESIĄCU" FontSize="10" Foreground="#88FFFFFF" FontWeight="Bold" FontFamily="Segoe UI"/>
+                                <TextBlock Text="{Binding FormattedMonthRevenue}" FontSize="20" Foreground="#FF7F3F" FontWeight="Bold" FontFamily="Segoe UI" Margin="0,6,0,0"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Karta 2: Transakcje w tym miesiącu -->
+                        <Border Grid.Column="2" Background="#1A1F26" BorderBrush="#2D3748" BorderThickness="1.5" CornerRadius="8" Padding="18,15">
+                            <StackPanel>
+                                <TextBlock Text="TRANSAKCJE W TYM MIESIĄCU" FontSize="10" Foreground="#88FFFFFF" FontWeight="Bold" FontFamily="Segoe UI"/>
+                                <TextBlock Text="{Binding MonthTransactionsCount}" FontSize="20" Foreground="White" FontWeight="Bold" FontFamily="Segoe UI" Margin="0,6,0,0"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Karta 3: Najpopularniejsza oferta -->
+                        <Border Grid.Column="4" Background="#1A1F26" BorderBrush="#2D3748" BorderThickness="1.5" CornerRadius="8" Padding="18,15">
+                            <StackPanel>
+                                <TextBlock Text="NAJPOPULARNIEJSZA OFERTA" FontSize="10" Foreground="#88FFFFFF" FontWeight="Bold" FontFamily="Segoe UI"/>
+                                <TextBlock Text="{Binding MostPopularOfferName}" FontSize="16" Foreground="White" FontWeight="Bold" FontFamily="Segoe UI" TextWrapping="Wrap" Margin="0,8,0,0"/>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+
+                    <!-- SEKCJA: UTARG DZIENNY PERSONELU I INTERNETU -->
+                    <TextBlock Text="{Binding SelectedDayName, StringFormat='Utarg z dnia {0}'}" 
+                               Foreground="#FF7F3F" 
+                               FontSize="16" 
+                               FontWeight="Bold" 
+                               FontFamily="Segoe UI" 
+                               Margin="0,0,0,12"/>
+
+                    <Border Background="#1A1F26" BorderBrush="#2D3748" BorderThickness="1.5" CornerRadius="8" Padding="5,0">
+                        <DataGrid ItemsSource="{Binding EmployeeRevenues}" 
+                                  Style="{StaticResource TableViewStyle}"
+                                  CanUserSortColumns="False"
+                                  IsReadOnly="True"
+                                  HeadersVisibility="Column">
+                            
+                            <DataGrid.Columns>
+                                <!-- Osoba (Pracownik lub Internet) -->
+                                <DataGridTemplateColumn Header="Osoba" Width="3*">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                <!-- Ikonka/Avatar użytkownika -->
+                                                <Grid Width="28" Height="28" Margin="0,0,10,0" VerticalAlignment="Center">
+                                                    <!-- Gdy zakup przez internet (IsInternet = True) -->
+                                                    <Grid Visibility="Collapsed" x:Name="InternetGrid">
+                                                        <TextBlock Text="🌐" FontSize="16" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                                    </Grid>
+                                                    
+                                                    <!-- Gdy pracownik (IsInternet = False) -->
+                                                    <Grid x:Name="StaffGrid">
+                                                        <!-- Fallback Silhouette -->
+                                                        <Ellipse Fill="#2D3748"/>
+                                                        <Path Data="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" 
+                                                              Fill="#A0AEC0" 
+                                                              Width="14" Height="14"
+                                                              Stretch="Uniform"
+                                                              HorizontalAlignment="Center" 
+                                                              VerticalAlignment="Center"/>
+                                                        
+                                                        <!-- Image Ellipse -->
+                                                        <Ellipse Width="28" Height="28">
+                                                            <Ellipse.Fill>
+                                                                <ImageBrush ImageSource="{Binding ProfilePicture, Converter={StaticResource ByteToImageConverter}}" Stretch="UniformToFill"/>
+                                                            </Ellipse.Fill>
+                                                            <Ellipse.Style>
+                                                                <Style TargetType="Ellipse">
+                                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding ProfilePicture}" Value="{x:Null}">
+                                                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </Ellipse.Style>
+                                                        </Ellipse>
+                                                    </Grid>
+                                                </Grid>
+                                                <TextBlock Text="{Binding Name}" Foreground="White" FontFamily="Segoe UI" FontSize="13" VerticalAlignment="Center"/>
+                                            </StackPanel>
+                                            <DataTemplate.Triggers>
+                                                <DataTrigger Binding="{Binding IsInternet}" Value="True">
+                                                    <Setter TargetName="InternetGrid" Property="Visibility" Value="Visible"/>
+                                                    <Setter TargetName="StaffGrid" Property="Visibility" Value="Collapsed"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding IsInternet}" Value="False">
+                                                    <Setter TargetName="InternetGrid" Property="Visibility" Value="Collapsed"/>
+                                                    <Setter TargetName="StaffGrid" Property="Visibility" Value="Visible"/>
+                                                </DataTrigger>
+                                            </DataTemplate.Triggers>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+
+                                <!-- Rola (Badge) -->
+                                <DataGridTemplateColumn Header="Rola" Width="2*">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Border x:Name="RoleBadge"
+                                                    CornerRadius="6"
+                                                    BorderThickness="1"
+                                                    Padding="8,4"
+                                                    HorizontalAlignment="Left"
+                                                    VerticalAlignment="Center">
+                                                <TextBlock Text="{Binding RoleName}" 
+                                                           FontFamily="Segoe UI" 
+                                                           FontSize="11" 
+                                                           FontWeight="Bold"/>
+                                            </Border>
+                                            <DataTemplate.Triggers>
+                                                <!-- Admin (RoleId = 1) -->
+                                                <DataTrigger Binding="{Binding RoleId}" Value="1">
+                                                    <Setter TargetName="RoleBadge" Property="Background" Value="#3A1E1E"/>
+                                                    <Setter TargetName="RoleBadge" Property="BorderBrush" Value="#5A2C2C"/>
+                                                    <Setter TargetName="RoleBadge" Property="TextBlock.Foreground" Value="#FF8E8E"/>
+                                                </DataTrigger>
+                                                <!-- Pracownik (RoleId = 2) -->
+                                                <DataTrigger Binding="{Binding RoleId}" Value="2">
+                                                    <Setter TargetName="RoleBadge" Property="Background" Value="#1A2E3E"/>
+                                                    <Setter TargetName="RoleBadge" Property="BorderBrush" Value="#2C4C66"/>
+                                                    <Setter TargetName="RoleBadge" Property="TextBlock.Foreground" Value="#8EC5FF"/>
+                                                </DataTrigger>
+                                                <!-- Internet (IsInternet = True) -->
+                                                <DataTrigger Binding="{Binding IsInternet}" Value="True">
+                                                    <Setter TargetName="RoleBadge" Property="Background" Value="#1A1F26"/>
+                                                    <Setter TargetName="RoleBadge" Property="BorderBrush" Value="#2D3748"/>
+                                                    <Setter TargetName="RoleBadge" Property="TextBlock.Foreground" Value="#A0AEC0"/>
+                                                </DataTrigger>
+                                            </DataTemplate.Triggers>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+
+                                <!-- Dzisiejszy utarg -->
+                                <DataGridTextColumn Header="Dzisiejszy utarg" 
+                                                    Binding="{Binding FormattedRevenue}" 
+                                                    Width="2*">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="VerticalAlignment" Value="Center"/>
+                                            <Setter Property="FontFamily" Value="Segoe UI"/>
+                                            <Setter Property="FontSize" Value="13"/>
+                                            <Setter Property="FontWeight" Value="Bold"/>
+                                            <Setter Property="Foreground" Value="#FF7F3F"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Border>
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>
+    </Grid>
+</UserControl>

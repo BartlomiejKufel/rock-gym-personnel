@@ -120,7 +120,7 @@
                 </Grid.ColumnDefinitions>
 
                 <TextBlock Grid.Column="0" 
-                           Text="Użytkownicy" 
+                           Text="Klienci" 
                            Foreground="White" 
                            FontSize="22" 
                            FontWeight="Bold" 

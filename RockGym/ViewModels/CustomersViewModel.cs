@@ -252,7 +252,7 @@ namespace RockGym.ViewModels
             {
                 try
                 {
-                    string qrText = Guid.NewGuid().ToString();
+                    string qrText = $"ROCKGYM_{displayModel.UserId}";
                     byte[] qrBytes;
 
                     using (var qrGenerator = new QRCodeGenerator())

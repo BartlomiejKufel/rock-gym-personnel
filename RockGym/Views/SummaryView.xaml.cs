@@ -2,9 +2,9 @@ using System.Windows.Controls;
 
 namespace RockGym.Views
 {
-    public partial class EmployeesView : UserControl
+    public partial class SummaryView : UserControl
     {
-        public EmployeesView()
+        public SummaryView()
         {
             InitializeComponent();
         }
