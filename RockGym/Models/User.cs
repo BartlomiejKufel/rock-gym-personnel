@@ -22,6 +22,7 @@ namespace RockGym.Models
         public virtual Role? Role { get; set; }
         public virtual ICollection<Entrance> Entrances { get; set; } = new List<Entrance>();
         public virtual ICollection<QrCard> QrCards { get; set; } = new List<QrCard>();
+        public virtual ICollection<Fingerprint> Fingerprints { get; set; } = new List<Fingerprint>();
         public virtual ICollection<PurchaseHistory> CustomerPurchases { get; set; } = new List<PurchaseHistory>();
         public virtual ICollection<PurchaseHistory> EmployeePurchases { get; set; } = new List<PurchaseHistory>();
         public virtual ICollection<Event> CommandedEvents { get; set; } = new List<Event>();

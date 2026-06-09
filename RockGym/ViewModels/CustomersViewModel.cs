@@ -4,9 +4,11 @@ using RockGym.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
+using Microsoft.Win32;
 using QRCoder;
 
 namespace RockGym.ViewModels
@@ -59,6 +61,7 @@ namespace RockGym.ViewModels
         public ICommand EditCustomerCommand { get; }
         public ICommand DeleteCustomerCommand { get; }
         public ICommand GenerateQrCodeCommand { get; }
+        public ICommand RegisterFingerprintCommand { get; }
 
         public CustomersViewModel(User currentUser)
         {
@@ -68,6 +71,7 @@ namespace RockGym.ViewModels
             EditCustomerCommand = new RelayCommand(ExecuteEditCustomer);
             DeleteCustomerCommand = new RelayCommand(ExecuteDeleteCustomer);
             GenerateQrCodeCommand = new RelayCommand(ExecuteGenerateQrCode);
+            RegisterFingerprintCommand = new RelayCommand(ExecuteRegisterFingerprint);
 
             LoadCustomers();
         }
@@ -81,6 +85,8 @@ namespace RockGym.ViewModels
                     var users = context.Users
                         .Include(u => u.Role)
                         .Include(u => u.Entrances)
+                        .Include(u => u.Fingerprints)
+                        .Include(u => u.QrCards)
                         .Include(u => u.CustomerPurchases)
                             .ThenInclude(p => p.Offer)
                         .ToList();
@@ -300,6 +306,23 @@ namespace RockGym.ViewModels
                 }
             }
         }
+
+        private void ExecuteRegisterFingerprint(object? parameter)
+        {
+            if (parameter is not UserDisplayModel displayModel) return;
+
+            try
+            {
+                var managerWindow = new RockGym.Views.FingerprintManagerWindow(displayModel.UserId, displayModel.FullName);
+                managerWindow.Owner = Application.Current.MainWindow;
+                managerWindow.ShowDialog();
+                LoadCustomers();
+            }
+            catch (Exception ex)
+            {
+                CustomMessageBox.Show($"Błąd otwierania menedżera odcisków palców: {ex.Message}", "Błąd", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
     }
 
     public class UserDisplayModel
@@ -321,6 +344,8 @@ namespace RockGym.ViewModels
         public List<ActivePurchaseDisplayModel> ActivePurchases { get; }
 
         public bool CanEdit { get; }
+        public bool HasFingerprint => User.Fingerprints != null && User.Fingerprints.Any();
+        public bool HasQrCode => User.QrCards != null && User.QrCards.Any();
 
         public UserDisplayModel(User user, User loggedInUser)
         {

@@ -184,6 +184,11 @@
                         Content="SKANER QR" 
                         Command="{Binding OpenScannerCommand}"
                         Margin="0,2,0,0"/>
+
+                <Button Style="{StaticResource SidebarButton}" 
+                        Content="SKANER ODCISKÓW" 
+                        Command="{Binding OpenFingerprintScannerCommand}"
+                        Margin="0,2,0,0"/>
             </StackPanel>
 
             <!-- 3. Przycisk Wyloguj (na samym dole) -->

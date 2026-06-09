@@ -14,6 +14,28 @@ namespace RockGym.Services
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<PurchaseHistory> PurchaseHistories { get; set; }
         public DbSet<QrCard> QrCards { get; set; }
+        public DbSet<Fingerprint> Fingerprints { get; set; }
+
+        public void InitializeDatabase()
+        {
+            try
+            {
+                Database.ExecuteSqlRaw(@"
+                    CREATE TABLE IF NOT EXISTS fingerprints (
+                        fingerprint_id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                        user_id BIGINT UNSIGNED NOT NULL,
+                        fingerprint_image LONGBLOB NOT NULL,
+                        fingerprint_hash VARCHAR(255) NOT NULL,
+                        date_of_creation DATETIME NOT NULL,
+                        FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+                    ) ENGINE=InnoDB;
+                ");
+            }
+            catch
+            {
+                // Ignorujemy błędy, jeśli baza nie jest jeszcze skonfigurowana lub dostępna
+            }
+        }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -171,6 +193,18 @@ namespace RockGym.Services
                 entity.Property(e => e.DateOfCreation).HasColumnName("date_of_creation");
 
                 entity.HasOne(d => d.User).WithMany(p => p.QrCards).HasForeignKey(d => d.UserId).OnDelete(DeleteBehavior.Cascade);
+            });
+
+            modelBuilder.Entity<Fingerprint>(entity =>
+            {
+                entity.ToTable("fingerprints").HasKey(e => e.FingerprintId);
+                entity.Property(e => e.FingerprintId).HasColumnName("fingerprint_id");
+                entity.Property(e => e.UserId).HasColumnName("user_id");
+                entity.Property(e => e.FingerprintImage).HasColumnName("fingerprint_image").IsRequired();
+                entity.Property(e => e.FingerprintHash).HasColumnName("fingerprint_hash").IsRequired();
+                entity.Property(e => e.DateOfCreation).HasColumnName("date_of_creation");
+
+                entity.HasOne(d => d.User).WithMany(p => p.Fingerprints).HasForeignKey(d => d.UserId).OnDelete(DeleteBehavior.Cascade);
             });
         }
     }

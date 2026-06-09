@@ -1,4 +1,5 @@
 using RockGym.Models;
+using RockGym.Services;
 using System.Windows;
 using System.Windows.Input;
 
@@ -39,12 +40,19 @@ namespace RockGym.ViewModels
         public ICommand ShowNotificationsCommand { get; }
         public ICommand ShowSummaryCommand { get; }
         public ICommand OpenScannerCommand { get; }
+        public ICommand OpenFingerprintScannerCommand { get; }
         public ICommand LogoutCommand { get; }
 
         public MainViewModel(User user)
         {
             _currentUser = user;
             LoggedInUserName = $"{user.Name} {user.Surname}";
+
+            // Inicjalizacja bazy danych (automatyczne utworzenie tabeli fingerprints)
+            using (var context = new RockGymContext())
+            {
+                context.InitializeDatabase();
+            }
 
             ShowCustomersCommand = new RelayCommand(o => ShowCustomers());
             ShowTransactionsCommand = new RelayCommand(o => ShowTransactions());
@@ -53,6 +61,7 @@ namespace RockGym.ViewModels
             ShowNotificationsCommand = new RelayCommand(o => ShowNotifications());
             ShowSummaryCommand = new RelayCommand(o => ShowSummary());
             OpenScannerCommand = new RelayCommand(o => OpenScanner());
+            OpenFingerprintScannerCommand = new RelayCommand(o => OpenFingerprintScanner());
             LogoutCommand = new RelayCommand(ExecuteLogout);
         }
 
@@ -87,6 +96,7 @@ namespace RockGym.ViewModels
         }
 
         private RockGym.Views.QrScannerWindow? _activeScannerWindow;
+        private RockGym.Views.FingerprintScannerWindow? _activeFingerprintScannerWindow;
 
         private void OpenScanner()
         {
@@ -112,6 +122,30 @@ namespace RockGym.ViewModels
             });
         }
 
+        private void OpenFingerprintScanner()
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                // Jeśli skaner odcisku jest już otwarty, przywróć go i przenieś na pierwszy plan
+                if (_activeFingerprintScannerWindow != null)
+                {
+                    if (_activeFingerprintScannerWindow.WindowState == WindowState.Minimized)
+                    {
+                        _activeFingerprintScannerWindow.WindowState = WindowState.Normal;
+                    }
+                    _activeFingerprintScannerWindow.Activate();
+                    _activeFingerprintScannerWindow.Focus();
+                    return;
+                }
+
+                // Inicjalizacja nowego okna skanera odcisków i podpięcie resetu referencji przy zamknięciu
+                _activeFingerprintScannerWindow = new RockGym.Views.FingerprintScannerWindow();
+                _activeFingerprintScannerWindow.Owner = Application.Current.MainWindow;
+                _activeFingerprintScannerWindow.Closed += (sender, e) => _activeFingerprintScannerWindow = null;
+                _activeFingerprintScannerWindow.Show();
+            });
+        }
+
         private void ExecuteLogout(object? parameter)
         {
             if (parameter is Window currentWindow)
@@ -123,6 +157,13 @@ namespace RockGym.ViewModels
                     {
                         _activeScannerWindow.Close();
                         _activeScannerWindow = null;
+                    }
+
+                    // Zamknij okno skanera odcisków przy wylogowywaniu
+                    if (_activeFingerprintScannerWindow != null)
+                    {
+                        _activeFingerprintScannerWindow.Close();
+                        _activeFingerprintScannerWindow = null;
                     }
 
                     var loginWindow = new RockGym.Views.LoginWindow();

@@ -317,8 +317,8 @@
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
 
-                        <!-- Akcje (QR, Edytuj, Usuń) -->
-                        <DataGridTemplateColumn Header="Akcje" Width="1.8*" HeaderStyle="{StaticResource CenteredHeaderStyle}">
+                        <!-- Akcje (QR, Odcisk, Edytuj, Usuń) -->
+                        <DataGridTemplateColumn Header="Akcje" Width="2.2*" HeaderStyle="{StaticResource CenteredHeaderStyle}">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
@@ -329,10 +329,38 @@
                                                 CommandParameter="{Binding}"
                                                 Margin="0,0,15,0">
                                             <Path Data="M3,3H9V9H3V3M5,5V7H7V5H5M15,3H21V9H15V3M17,5V7H19V5H17M3,15H9V21H3V15M5,17V19H7V17H5M15,15H17V17H15V15M17,17H19V19H17V17M19,15H21V17H19V15M19,19H21V21H19V19M17,19H19V21H17V19M15,19H17V21H15V19M15,17H17V19H15V17" 
-                                                  Fill="White" 
                                                   Width="16" 
                                                   Height="16" 
-                                                  Stretch="Uniform"/>
+                                                  Stretch="Uniform">
+                                                 <Path.Style>
+                                                     <Style TargetType="Path">
+                                                         <Setter Property="Fill" Value="White"/>
+                                                         <Style.Triggers>
+                                                             <DataTrigger Binding="{Binding HasQrCode}" Value="True">
+                                                                 <Setter Property="Fill" Value="#48BB78"/>
+                                                             </DataTrigger>
+                                                         </Style.Triggers>
+                                                     </Style>
+                                                 </Path.Style>
+                                            </Path>
+                                        </Button>
+
+                                        <!-- Rejestruj Odcisk Palca -->
+                                        <Button ToolTip="Zarejestruj odcisk palca"
+                                                Command="{Binding DataContext.RegisterFingerprintCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                CommandParameter="{Binding}"
+                                                Content="👇"
+                                                Margin="0,0,15,0">
+                                            <Button.Style>
+                                                <Style TargetType="Button" BasedOn="{StaticResource ActionButton}">
+                                                    <Setter Property="Foreground" Value="White"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding HasFingerprint}" Value="True">
+                                                            <Setter Property="Foreground" Value="#48BB78"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Button.Style>
                                         </Button>
                                         
                                         <!-- Edytuj -->
