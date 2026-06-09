@@ -238,6 +238,7 @@ namespace RockGym.ViewModels
             }
         }
 
+        // Generuje nową grafikę kodu QR w formacie PNG dla użytkownika. Zapisuje kod w bazie danych w tabeli qr_cards jako BLOB.
         private void ExecuteGenerateQrCode(object? parameter)
         {
             if (parameter is not UserDisplayModel displayModel) return;
@@ -252,6 +253,7 @@ namespace RockGym.ViewModels
             {
                 try
                 {
+                    // Prefix zawierający ID użytkownika
                     string qrText = $"ROCKGYM_{displayModel.UserId}";
                     byte[] qrBytes;
 
@@ -268,6 +270,7 @@ namespace RockGym.ViewModels
 
                     using (var context = new RockGymContext())
                     {
+                        // Sprawdź, czy użytkownik posiada już kartę QR w bazie
                         var existingCard = context.QrCards.FirstOrDefault(c => c.UserId == displayModel.UserId);
                         if (existingCard != null)
                         {
@@ -323,16 +326,19 @@ namespace RockGym.ViewModels
         {
             User = user;
 
+            // Sprawdzenie, czy użytkownik jest już na obiekcie
             IsActive = user.Entrances.Any(e =>
                 e.DateOfEntry.Date == DateTime.Today &&
                 e.StartTime <= DateTime.Now.TimeOfDay &&
                 e.EndTime == null);
 
+            // Wybierz aktywne karnety na podstawie czasu ważności
             ActivePurchases = user.CustomerPurchases
                 .Where(p => p.Offer != null && p.Offer.Duration != 0 && p.PurchaseDate.AddDays(p.Offer.Duration) >= DateTime.Now)
                 .Select(p => new ActivePurchaseDisplayModel(p))
                 .ToList();
 
+            // Admin edytuje wszystkich, pracownicy nie mogą edytować kont administratorów
             CanEdit = (loggedInUser.RoleId == 1) || (user.RoleId != 1);
         }
     }

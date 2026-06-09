@@ -38,6 +38,7 @@ namespace RockGym.ViewModels
         public ICommand ShowEventsCommand { get; }
         public ICommand ShowNotificationsCommand { get; }
         public ICommand ShowSummaryCommand { get; }
+        public ICommand OpenScannerCommand { get; }
         public ICommand LogoutCommand { get; }
 
         public MainViewModel(User user)
@@ -51,6 +52,7 @@ namespace RockGym.ViewModels
             ShowEventsCommand = new RelayCommand(o => ShowEvents());
             ShowNotificationsCommand = new RelayCommand(o => ShowNotifications());
             ShowSummaryCommand = new RelayCommand(o => ShowSummary());
+            OpenScannerCommand = new RelayCommand(o => OpenScanner());
             LogoutCommand = new RelayCommand(ExecuteLogout);
         }
 
@@ -82,6 +84,16 @@ namespace RockGym.ViewModels
         private void ShowSummary()
         {
             CurrentViewModel = new SummaryViewModel();
+        }
+
+        private void OpenScanner()
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                var scannerWindow = new RockGym.Views.QrScannerWindow();
+                scannerWindow.Owner = Application.Current.MainWindow;
+                scannerWindow.Show();
+            });
         }
 
         private void ExecuteLogout(object? parameter)

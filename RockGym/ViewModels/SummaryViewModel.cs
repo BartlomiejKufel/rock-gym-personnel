@@ -27,6 +27,11 @@ namespace RockGym.ViewModels
         private string _selectedDayName = string.Empty;
         private string _selectedMonthYearName = string.Empty;
 
+        /// <summary>
+        /// Wybrana data filtrowania statystyk i zestawień na pulpicie.
+        /// Zawiera wbudowaną logikę cofania wyboru (rollback), jeśli użytkownik spróbuje
+        /// wybrać lub wpisać ręcznie datę z przyszłości (bądź wyczyścić pole).
+        /// </summary>
         public DateTime? SelectedDate
         {
             get => _selectedDate;
@@ -34,12 +39,13 @@ namespace RockGym.ViewModels
             {
                 if (value == null || value.Value > DateTime.Today)
                 {
+                    // Wymuszenie odświeżenia powiązania w widoku w celu cofnięcia niepoprawnej wartości
                     OnPropertyChanged(nameof(SelectedDate));
                     return;
                 }
                 _selectedDate = value.Value;
                 OnPropertyChanged();
-                LoadSummaryData();
+                LoadSummaryData(); // Przeładuj wszystkie dane statystyczne dla nowej daty
             }
         }
 
@@ -117,6 +123,10 @@ namespace RockGym.ViewModels
             LoadSummaryData();
         }
 
+        /// <summary>
+        /// Pobiera z bazy danych za pomocą EF Core wszystkie zestawienia statystyczne dla wybranego dnia
+        /// oraz odpowiadającego mu miesiąca, a następnie aktualizuje właściwości powiązane z UI.
+        /// </summary>
         private void LoadSummaryData()
         {
             try
@@ -127,31 +137,40 @@ namespace RockGym.ViewModels
                     var targetYear = targetDate.Year;
                     var targetMonth = targetDate.Month;
 
+                    // Dynamiczne budowanie lokalizowanych nazw nagłówków sekcji (np. "Czerwiec 2026")
                     SelectedDayName = targetDate.ToString("dd.MM.yyyy");
                     var monthName = targetDate.ToString("MMMM yyyy", new CultureInfo("pl-PL"));
                     SelectedMonthYearName = char.ToUpper(monthName[0]) + monthName.Substring(1);
 
+                    // 1. DZIENNY UTARG: Sumowanie przychodu ze sprzedaży karnetów/ofert
                     TodayRevenue = context.PurchaseHistories
                         .Where(p => p.PurchaseDate.Date == targetDate)
                         .Sum(p => (double?)p.Price) ?? 0.0;
 
+                    // 2. DZIENNA LICZBA TRANSAKCJI
                     TodayTransactionsCount = context.PurchaseHistories
                         .Count(p => p.PurchaseDate.Date == targetDate);
 
+                    // 3. DZIENNE WEJŚCIA: Suma wejść zarejestrowanych dzisiaj
                     TodayEntriesCount = context.Entrances
                         .Count(e => e.DateOfEntry.Date == targetDate);
 
+                    // 4. OBECNI W KLUBIE: Wejścia dzisiejsze, które nie mają jeszcze wpisanego wyjścia (EndTime == null)
                     ActiveGymLoad = context.Entrances
                         .Count(e => e.DateOfEntry.Date == targetDate && e.EndTime == null);
 
+                    // 5. MIESIĘCZNY UTARG
                     MonthRevenue = context.PurchaseHistories
                         .Where(p => p.PurchaseDate.Year == targetYear && p.PurchaseDate.Month == targetMonth)
                         .Sum(p => (double?)p.Price) ?? 0.0;
 
+                    // 6. MIESIĘCZNA LICZBA TRANSAKCJI
                     MonthTransactionsCount = context.PurchaseHistories
                         .Where(p => p.PurchaseDate.Year == targetYear && p.PurchaseDate.Month == targetMonth)
                         .Count();
 
+                    // 7. NAJPOPULARNIEJSZA OFERTA W MIESIĄCU:
+                    // Grupowanie według nazwy oferty i wyliczenie liczby zakupów, pomijając oferty jednorazowe/specjalne (duration = 0)
                     var popularOfferGroup = context.PurchaseHistories
                         .Where(p => p.PurchaseDate.Year == targetYear && 
                                     p.PurchaseDate.Month == targetMonth && 
@@ -164,10 +183,12 @@ namespace RockGym.ViewModels
 
                     MostPopularOfferName = popularOfferGroup?.OfferName ?? "Brak transakcji";
 
+                    // 8. UTARG PERSONELU: Zestawienie sprzedaży dokonanej przez poszczególnych pracowników
                     var todayPurchases = context.PurchaseHistories
                         .Where(p => p.PurchaseDate.Date == targetDate)
                         .ToList();
 
+                    // Pobierz tylko administratorów i pracowników (role_id = 1 lub 2)
                     var staffUsers = context.Users
                         .Include(u => u.Role)
                         .Where(u => u.RoleId == 1 || u.RoleId == 2)
@@ -192,6 +213,7 @@ namespace RockGym.ViewModels
                         });
                     }
 
+                    // Oblicz zakupy online (gdzie transakcja nie ma przypisanego EmployeeId - zakup internetowy)
                     double internetRevenue = todayPurchases
                         .Where(p => p.EmployeeId == null)
                         .Sum(p => p.Price);
@@ -205,6 +227,7 @@ namespace RockGym.ViewModels
                         IsInternet = true
                     });
 
+                    // Sortowanie listy od najwyższego utargu i zasilenie kolekcji dla DataGrid
                     EmployeeRevenues = new ObservableCollection<EmployeeRevenueDisplayModel>(
                         list.OrderByDescending(r => r.Revenue)
                     );
@@ -216,6 +239,10 @@ namespace RockGym.ViewModels
             }
         }
 
+        /// <summary>
+        /// Generuje plik arkusza Excel (.xlsx) za pomocą biblioteki ClosedXML.
+        /// Eksportuje listę wszystkich transakcji z wybranego miesiąca z nagłówkami i formatowaniem walutowym.
+        /// </summary>
         private void DownloadMonthlyTransactions()
         {
             try
@@ -226,6 +253,7 @@ namespace RockGym.ViewModels
 
                 using (var context = new RockGymContext())
                 {
+                    // Pobranie transakcji wraz z danymi powiązanymi (pracownik, klient, oferta)
                     var transactions = context.PurchaseHistories
                         .Include(p => p.Employee)
                         .Include(p => p.Customer)
@@ -255,7 +283,7 @@ namespace RockGym.ViewModels
                         {
                             var worksheet = workbook.Worksheets.Add("Transakcje");
 
-                            // Nagłówki kolumn
+                            // Nagłówki kolumn tabeli wyciągu
                             worksheet.Cell(1, 1).Value = "Numer operacji";
                             worksheet.Cell(1, 2).Value = "Pracownik";
                             worksheet.Cell(1, 3).Value = "Klient";
