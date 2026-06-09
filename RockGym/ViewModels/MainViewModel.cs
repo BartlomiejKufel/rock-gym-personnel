@@ -86,13 +86,29 @@ namespace RockGym.ViewModels
             CurrentViewModel = new SummaryViewModel();
         }
 
+        private RockGym.Views.QrScannerWindow? _activeScannerWindow;
+
         private void OpenScanner()
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
-                var scannerWindow = new RockGym.Views.QrScannerWindow();
-                scannerWindow.Owner = Application.Current.MainWindow;
-                scannerWindow.Show();
+                // Jeśli skaner jest już otwarty, przywróć go i przenieś na pierwszy plan
+                if (_activeScannerWindow != null)
+                {
+                    if (_activeScannerWindow.WindowState == WindowState.Minimized)
+                    {
+                        _activeScannerWindow.WindowState = WindowState.Normal;
+                    }
+                    _activeScannerWindow.Activate();
+                    _activeScannerWindow.Focus();
+                    return;
+                }
+
+                // Inicjalizacja nowego okna skanera i podpięcie resetu referencji przy zamknięciu
+                _activeScannerWindow = new RockGym.Views.QrScannerWindow();
+                _activeScannerWindow.Owner = Application.Current.MainWindow;
+                _activeScannerWindow.Closed += (sender, e) => _activeScannerWindow = null;
+                _activeScannerWindow.Show();
             });
         }
 
@@ -102,6 +118,13 @@ namespace RockGym.ViewModels
             {
                 Application.Current.Dispatcher.Invoke(() =>
                 {
+                    // Zamknij okno skanera przy wylogowywaniu
+                    if (_activeScannerWindow != null)
+                    {
+                        _activeScannerWindow.Close();
+                        _activeScannerWindow = null;
+                    }
+
                     var loginWindow = new RockGym.Views.LoginWindow();
                     loginWindow.Show();
 

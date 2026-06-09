@@ -2,10 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using RockGym.Models;
 using RockGym.Services;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.ObjectModel;
-using System.Drawing;
-using System.IO;
 using System.Linq;
 using System.Media;
 using System.Windows;
@@ -20,9 +17,6 @@ namespace RockGym.ViewModels
 {
     public class QrScannerViewModel : ViewModelBase
     {
-        private static readonly ConcurrentDictionary<string, ulong> _qrCodeCache =
-            new ConcurrentDictionary<string, ulong>();
-
         private readonly ZXing.Windows.Compatibility.BarcodeReader _barcodeReader;
 
         // Stan skanowania
@@ -82,6 +76,13 @@ namespace RockGym.ViewModels
         {
             get => _pauseSubStatusText;
             set { _pauseSubStatusText = value; OnPropertyChanged(); }
+        }
+
+        private Brush _pauseStatusForeground = new SolidColorBrush(Color.FromRgb(72, 187, 120)); // Domyślnie zielony
+        public Brush PauseStatusForeground
+        {
+            get => _pauseStatusForeground;
+            set { _pauseStatusForeground = value; OnPropertyChanged(); }
         }
 
         // Dane zalogowanego / zeskanowanego klienta
@@ -163,14 +164,12 @@ namespace RockGym.ViewModels
             ResumeScanningCommand = new RelayCommand(o => ResumeScanning());
             
             ResumeScanning();
-        }        /// <summary>
-        /// Przetwarza zeskanowaną wartość kodu QR (z kamery lub pliku graficznego).
-        /// Wykonuje autoryzację kodu, rejestruje wejście/wyjście oraz pobiera dane użytkownika.
-        /// </summary>
-        /// <param name="code">Zeskanowany ciąg tekstowy z kodu QR</param>
+        }
+
+        // Przetwarza zeskanowany kod QR. Wykonuje sprawdzenie kodu, rejestruje wejście/wyjście oraz pobiera dane użytkownika.
         private void HandleScannedCode(string code)
         {
-            // Wstrzymaj skanowanie klatek na czas przetwarzania i wyświetlania wyniku
+            // Wstrzymanie skanowania klatek przy przetwarzaniu i wyświetlania wyników
             IsScanningPaused = true;
 
             if (string.IsNullOrWhiteSpace(code))
@@ -181,69 +180,30 @@ namespace RockGym.ViewModels
             }
 
             ulong userId = 0;
-            bool isDirectMatch = false;
 
-            // KROK 1: Sprawdź format bezpośredni "ROCKGYM_{UserId}" (nowy standard)
+            // Sprawdź format
             if (code.StartsWith("ROCKGYM_"))
             {
                 string idPart = code.Substring(8);
                 if (ulong.TryParse(idPart, out ulong parsedId))
                 {
                     userId = parsedId;
-                    isDirectMatch = true;
                 }
             }
 
-            // KROK 2: Jeśli brak dopasowania bezpośredniego, przeszukaj stare karty (legacy GUIDs).
-            // Wykorzystywany jest statyczny słownik podręczny (cache) w celu uniknięcia kosztownego 
-            // dekodowania grafik kodów QR w pętli przy każdym skanowaniu.
-            if (!isDirectMatch)
-            {
-                if (_qrCodeCache.TryGetValue(code, out ulong cachedId))
-                {
-                    userId = cachedId;
-                }
-                else
-                {
-                    try
-                    {
-                        using (var context = new RockGymContext())
-                        {
-                            // Pobierz wszystkie obrazy kart z bazy danych
-                            var qrCards = context.QrCards.Select(c => new { c.UserId, c.QrCode }).ToList();
-                            foreach (var card in qrCards)
-                            {
-                                if (card.QrCode != null && card.QrCode.Length > 0)
-                                {
-                                    // Dekoduj BLOB graficzny w pamięci
-                                    string? decodedDbCode = DecodeQrCodeBytes(card.QrCode);
-                                    if (decodedDbCode != null)
-                                    {
-                                        // Zapisz w cache
-                                        _qrCodeCache[decodedDbCode] = card.UserId;
-                                        if (decodedDbCode == code)
-                                        {
-                                            userId = card.UserId;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        CustomMessageBox.Show($"Błąd odczytu bazy kodów QR: {ex.Message}", "Błąd", MessageBoxButton.OK, MessageBoxImage.Error);
-                        ResumeScanning();
-                        return;
-                    }
-                }
-            }
-
-            // Obsługa braku dopasowania użytkownika
+            // Brak dopasowania użytkownika
             if (userId == 0)
             {
+                PauseStatusText = "BŁĘDNY KOD QR";
+                PauseStatusForeground = new SolidColorBrush(Color.FromRgb(229, 62, 62));
+                PauseSubStatusText = "Nieznany użytkownik lub niepoprawny kod";
+                PauseOverlayVisibility = Visibility.Visible;
+
+                EmptyCardVisibility = Visibility.Visible;
+                ClientCardVisibility = Visibility.Collapsed;
+                ResumeButtonVisibility = Visibility.Visible;
+
                 CustomMessageBox.Show("Zeskanowano nieznany kod QR lub kod nie jest przypisany do żadnego użytkownika.", "Nieznany kod", MessageBoxButton.OK, MessageBoxImage.Warning);
-                ResumeScanning();
                 return;
             }
 
@@ -251,14 +211,14 @@ namespace RockGym.ViewModels
             {
                 using (var context = new RockGymContext())
                 {
-                    // KROK 3: Rejestracja wejścia lub wyjścia (Check-in / Check-out).
-                    // Wyszukujemy otwarty wpis (EndTime == null) na dzisiejszy dzień dla tego użytkownika.
+                    // Rejestracja wejścia lub wyjścia
+                    // Wyszukujemy otwarty wpis (EndTime == null) na dzisiejszy dzień dla tego użytkownika
                     var todayEntry = context.Entrances
                         .FirstOrDefault(e => e.UserId == userId && e.DateOfEntry.Date == DateTime.Today && e.EndTime == null);
 
                     if (todayEntry == null)
                     {
-                        // Jeśli brak aktywnego wpisu, rejestrujemy NOWE WEJŚCIE (Check-in)
+                        // Jeśli nie ma aktywnego wpisu, rejestrujemy nowe wejście
                         var newEntry = new Entrance
                         {
                             UserId = userId,
@@ -269,14 +229,14 @@ namespace RockGym.ViewModels
                     }
                     else
                     {
-                        // Jeśli użytkownik jest już w klubie, rejestrujemy WYJŚCIE (Check-out) i wyliczamy czas pobytu
+                        // Jeśli użytkownik jest już w klubie, rejestrujemy wyjście i liczymy czas pobytu
                         todayEntry.EndTime = DateTime.Now.TimeOfDay;
                         todayEntry.TimeSpent = todayEntry.EndTime.Value - todayEntry.StartTime;
                         context.Entrances.Update(todayEntry);
                     }
                     context.SaveChanges();
 
-                    // KROK 4: Pobranie zaktualizowanych danych użytkownika wraz z rolami i karnetami
+                    // Pobranie danych użytkownika wraz z rolą i karnetami
                     var user = context.Users
                         .Include(u => u.Role)
                         .Include(u => u.Entrances)
@@ -291,12 +251,11 @@ namespace RockGym.ViewModels
                         return;
                     }
 
-                    // Prezentacja danych użytkownika w UI
                     ClientName = $"{user.Name} {user.Surname}";
                     ClientRole = user.Role?.Name ?? "klient";
                     StyleRoleBadge(user.RoleId);
 
-                    // Sprawdzenie statusu obecności w klubie (czy ma otwarty wpis dzisiaj)
+                    // Sprawdzenie statusu aktywny/nieaktywny
                     bool isActive = user.Entrances.Any(e =>
                         e.DateOfEntry.Date == DateTime.Today &&
                         e.StartTime <= DateTime.Now.TimeOfDay &&
@@ -304,19 +263,18 @@ namespace RockGym.ViewModels
 
                     if (isActive)
                     {
-                        ClientStatusBrush = new SolidColorBrush(Color.FromRgb(72, 187, 120)); // Zielony (Aktywny)
+                        ClientStatusBrush = new SolidColorBrush(Color.FromRgb(72, 187, 120));
                         ClientStatusText = "Aktywny";
                     }
                     else
                     {
-                        ClientStatusBrush = new SolidColorBrush(Color.FromRgb(160, 174, 192)); // Szary (Nieaktywny)
+                        ClientStatusBrush = new SolidColorBrush(Color.FromRgb(160, 174, 192));
                         ClientStatusText = "Nieaktywny";
                     }
 
-                    // Przypisanie awatara
                     ProfilePicture = user.ProfilePicture;
 
-                    // KROK 5: Pobranie i filtrowanie aktywnych karnetów (ofert o duration > 0 i niewygaśniętych)
+                    // Pobranie aktywnych karnetów
                     ActiveOffers.Clear();
                     var activePurchases = user.CustomerPurchases
                         .Where(p => p.Offer != null && p.Offer.Duration != 0 && p.PurchaseDate.AddDays(p.Offer.Duration) >= DateTime.Now)
@@ -332,10 +290,10 @@ namespace RockGym.ViewModels
                         });
                     }
 
-                    // Przełączenie paneli widoczności w oknie skanera
                     EmptyCardVisibility = Visibility.Collapsed;
                     ClientCardVisibility = Visibility.Visible;
                     ResumeButtonVisibility = Visibility.Visible;
+                    PauseOverlayVisibility = Visibility.Visible;
                 }
             }
             catch (Exception ex)
@@ -349,22 +307,22 @@ namespace RockGym.ViewModels
         {
             switch (roleId)
             {
-                case 1: // Admin: Czerwony
+                case 1: // Admin
                     ClientRoleBackground = new SolidColorBrush(Color.FromRgb(58, 30, 30));
                     ClientRoleBorderBrush = new SolidColorBrush(Color.FromRgb(90, 44, 44));
                     ClientRoleForeground = new SolidColorBrush(Color.FromRgb(255, 142, 142));
                     break;
-                case 2: // Pracownik: Niebieski
+                case 2: // Pracownik
                     ClientRoleBackground = new SolidColorBrush(Color.FromRgb(26, 46, 62));
                     ClientRoleBorderBrush = new SolidColorBrush(Color.FromRgb(44, 76, 102));
                     ClientRoleForeground = new SolidColorBrush(Color.FromRgb(142, 197, 255));
                     break;
-                case 3: // Instruktor: Fioletowy
+                case 3: // Instruktor
                     ClientRoleBackground = new SolidColorBrush(Color.FromRgb(45, 30, 62));
                     ClientRoleBorderBrush = new SolidColorBrush(Color.FromRgb(72, 44, 102));
                     ClientRoleForeground = new SolidColorBrush(Color.FromRgb(216, 142, 255));
                     break;
-                case 4: // Klient: Zielony
+                case 4: // Klient
                 default:
                     ClientRoleBackground = new SolidColorBrush(Color.FromRgb(30, 58, 36));
                     ClientRoleBorderBrush = new SolidColorBrush(Color.FromRgb(44, 94, 53));
@@ -377,31 +335,17 @@ namespace RockGym.ViewModels
         {
             IsScanningPaused = false;
             PauseOverlayVisibility = Visibility.Collapsed;
+
+            PauseStatusText = "ZESKANOWANO POPRAWNIE";
+            PauseStatusForeground = new SolidColorBrush(Color.FromRgb(72, 187, 120));
+            PauseSubStatusText = "Skanowanie wstrzymane";
+
             EmptyCardVisibility = Visibility.Visible;
             ClientCardVisibility = Visibility.Collapsed;
             ResumeButtonVisibility = Visibility.Collapsed;
         }
 
-        private string? DecodeQrCodeBytes(byte[] qrBytes)
-        {
-            try
-            {
-                using (var stream = new MemoryStream(qrBytes))
-                {
-                    using (var bitmap = new Bitmap(stream))
-                    {
-                        var result = _barcodeReader.Decode(bitmap);
-                        return result?.Text;
-                    }
-                }
-            }
-            catch
-            {
-                return null;
-            }
         }
-
-    }
 
     public class ActiveOfferItemViewModel
     {

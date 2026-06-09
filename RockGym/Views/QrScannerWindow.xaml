@@ -241,7 +241,7 @@
                   <!-- Komunikat statusu wstrzymania -->
                 <Border x:Name="PauseOverlay" Background="#CC111622" Visibility="{Binding PauseOverlayVisibility}">
                     <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                        <TextBlock x:Name="PauseStatusTextBlock" Text="{Binding PauseStatusText}" Foreground="#48BB78" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" FontFamily="Segoe UI"/>
+                        <TextBlock x:Name="PauseStatusTextBlock" Text="{Binding PauseStatusText}" Foreground="{Binding PauseStatusForeground}" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" FontFamily="Segoe UI"/>
                         <TextBlock x:Name="PauseSubStatusTextBlock" Text="{Binding PauseSubStatusText}" Foreground="#88FFFFFF" FontSize="12" HorizontalAlignment="Center" Margin="0,4,0,0" FontFamily="Segoe UI"/>
                     </StackPanel>
                 </Border>
