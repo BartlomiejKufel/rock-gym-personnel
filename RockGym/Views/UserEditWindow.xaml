@@ -16,7 +16,6 @@
         Foreground="White">
 
     <Window.Resources>
-        <!-- Style dla TextBox -->
         <Style x:Key="DialogTextBox" TargetType="TextBox">
             <Setter Property="Background" Value="#1A1F26"/>
             <Setter Property="BorderBrush" Value="#2D3748"/>
@@ -52,7 +51,6 @@
             </Setter>
         </Style>
 
-        <!-- Style dla PasswordBox -->
         <Style x:Key="DialogPasswordBox" TargetType="PasswordBox">
             <Setter Property="Background" Value="#1A1F26"/>
             <Setter Property="BorderBrush" Value="#2D3748"/>
@@ -87,7 +85,6 @@
             </Setter>
         </Style>
 
-        <!-- Style dla przycisków -->
         <Style x:Key="DialogButton" TargetType="Button">
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="BorderThickness" Value="0"/>
@@ -110,7 +107,6 @@
             </Setter>
         </Style>
 
-        <!-- Przycisk Zapisz -->
         <Style x:Key="SaveButton" TargetType="Button" BasedOn="{StaticResource DialogButton}">
             <Setter Property="Background" Value="#FF7F3F"/>
             <Style.Triggers>
@@ -121,7 +117,6 @@
             </Style.Triggers>
         </Style>
 
-        <!-- Przycisk Anuluj -->
         <Style x:Key="CancelButton" TargetType="Button" BasedOn="{StaticResource DialogButton}">
             <Setter Property="Background" Value="#2D3748"/>
             <Style.Triggers>
@@ -132,7 +127,6 @@
             </Style.Triggers>
         </Style>
 
-        <!-- Styl dla ComboBox -->
         <Style x:Key="DialogComboBox" TargetType="ComboBox">
             <Setter Property="Background" Value="#1A1F26"/>
             <Setter Property="BorderBrush" Value="#2D3748"/>
@@ -240,7 +234,6 @@
             </Setter>
         </Style>
 
-        <!-- Styl dla ComboBoxItem -->
         <Style TargetType="ComboBoxItem">
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="Background" Value="Transparent"/>
@@ -274,12 +267,11 @@
 
     <Grid Margin="25">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/> <!-- Nagłówek -->
-            <RowDefinition Height="*"/>    <!-- Formularz -->
-            <RowDefinition Height="Auto"/> <!-- Przyciski -->
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <!-- Nagłówek -->
         <TextBlock x:Name="HeaderTextBlock"
                    Text="Edytuj użytkownika"
                    FontSize="20"
@@ -288,10 +280,8 @@
                    Margin="0,0,0,20"
                    FontFamily="Segoe UI"/>
 
-        <!-- Formularz -->
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="0,0,0,15">
             <StackPanel Margin="0,0,10,0">
-                <!-- Imię i Nazwisko -->
                 <Grid Margin="0,0,0,12">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
@@ -310,19 +300,15 @@
                     </StackPanel>
                 </Grid>
 
-                <!-- E-mail -->
                 <TextBlock Text="E-MAIL" FontSize="10" FontWeight="Bold" Foreground="#88FFFFFF" Margin="0,0,0,6"/>
                 <TextBox x:Name="EmailTextBox" Style="{StaticResource DialogTextBox}" Margin="0,0,0,12"/>
 
-                <!-- Login -->
                 <TextBlock Text="LOGIN" FontSize="10" FontWeight="Bold" Foreground="#88FFFFFF" Margin="0,0,0,6"/>
                 <TextBox x:Name="LoginTextBox" Style="{StaticResource DialogTextBox}" Margin="0,0,0,12"/>
 
-                <!-- Hasło -->
                 <TextBlock x:Name="PasswordLabelTextBlock" Text="HASŁO" FontSize="10" FontWeight="Bold" Foreground="#88FFFFFF" Margin="0,0,0,6"/>
                 <PasswordBox x:Name="PasswordInput" Style="{StaticResource DialogPasswordBox}" Margin="0,0,0,12"/>
 
-                <!-- Rola -->
                 <TextBlock Text="ROLA" FontSize="10" FontWeight="Bold" Foreground="#88FFFFFF" Margin="0,0,0,6"/>
                 <ComboBox x:Name="RoleComboBox" 
                           Style="{StaticResource DialogComboBox}" 
@@ -331,7 +317,6 @@
             </StackPanel>
         </ScrollViewer>
 
-        <!-- Przyciski akcji -->
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
             <Button Style="{StaticResource CancelButton}" Content="Anuluj" Click="CancelButton_Click" Margin="0,0,10,0" Height="30" Width="90"/>
             <Button Style="{StaticResource SaveButton}" Content="Zapisz" Click="SaveButton_Click" Width="110" Height="30"/>

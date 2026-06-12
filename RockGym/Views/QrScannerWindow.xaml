@@ -14,7 +14,6 @@
         Foreground="White">
 
     <Window.Resources>
-        <!-- Style dla przycisków w oknie -->
         <Style x:Key="ScannerButton" TargetType="Button">
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="BorderThickness" Value="0"/>
@@ -56,7 +55,6 @@
             </Style.Triggers>
         </Style>
 
-        <!-- Style dla ComboBox w oknie -->
         <Style x:Key="ScannerComboBox" TargetType="ComboBox">
             <Setter Property="Background" Value="#1A1F26"/>
             <Setter Property="BorderBrush" Value="#2D3748"/>
@@ -177,13 +175,12 @@
 
     <Grid Margin="20">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/> <!-- Nagłówek i Kamera combo -->
-            <RowDefinition Height="280"/> <!-- Podgląd z kamery -->
-            <RowDefinition Height="*"/>    <!-- Szczegóły zeskanowanego klienta -->
-            <RowDefinition Height="Auto"/> <!-- Przyciski na dole -->
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="280"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <!-- 1. Nagłówek i wybór kamery -->
         <Grid Grid.Row="0" Margin="0,0,0,15">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
@@ -213,16 +210,13 @@
                     Click="BrowseFileButton_Click"/>
         </Grid>
 
-        <!-- 2. Obiektyw kamery -->
         <Border Grid.Row="1" Background="Black" CornerRadius="8" BorderBrush="#2D3748" BorderThickness="2" ClipToBounds="True">
             <Grid>
                 <Image x:Name="CameraPreview" Stretch="UniformToFill"/>
                 
-                <!-- Overlay dla skanowania (celownik) -->
                 <Grid x:Name="ScannerOverlay">
                     <Border BorderBrush="#7FFF7F3F" BorderThickness="1" Margin="60" CornerRadius="12">
                         <Grid>
-                            <!-- Narożniki celownika -->
                             <Path Data="M0,20 L0,0 L20,0" Stroke="#FF7F3F" StrokeThickness="4" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                             <Path Data="M0,0 L20,0 L20,20" Stroke="#FF7F3F" StrokeThickness="4" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,0,-2,0"/>
                             <Path Data="M0,20 L0,0 L20,0" Stroke="#FF7F3F" StrokeThickness="4" HorizontalAlignment="Left" VerticalAlignment="Bottom" RenderTransformOrigin="0.5,0.5">
@@ -238,7 +232,7 @@
                         </Grid>
                     </Border>
                 </Grid>
-                  <!-- Komunikat statusu wstrzymania -->
+
                 <Border x:Name="PauseOverlay" Background="#CC111622" Visibility="{Binding PauseOverlayVisibility}">
                     <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                         <TextBlock x:Name="PauseStatusTextBlock" Text="{Binding PauseStatusText}" Foreground="{Binding PauseStatusForeground}" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" FontFamily="Segoe UI"/>
@@ -248,9 +242,7 @@
             </Grid>
         </Border>
 
-        <!-- 3. Szczegóły klienta -->
         <Grid Grid.Row="2" Margin="0,15,0,15">
-            <!-- Pusta karta (przed zeskanowaniem) -->
             <Border x:Name="EmptyCard" Background="#1A1F26" BorderBrush="#2D3748" BorderThickness="1.5" CornerRadius="8" Padding="20" Visibility="{Binding EmptyCardVisibility}">
                 <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                     <TextBlock Text="📷" FontSize="36" HorizontalAlignment="Center"/>
@@ -259,13 +251,12 @@
                 </StackPanel>
             </Border>
 
-            <!-- Karta Klienta (po udanym zeskanowaniu) -->
             <Border x:Name="ClientCard" Background="#1A1F26" BorderBrush="#2D3748" BorderThickness="1.5" CornerRadius="8" Padding="15" Visibility="{Binding ClientCardVisibility}">
                 <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/> <!-- Avatar, imię, rola, status -->
-                        <RowDefinition Height="Auto"/> <!-- Separator -->
-                        <RowDefinition Height="*"/>    <!-- Oferty / wejścia -->
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
                     <Grid Grid.Row="0">
@@ -274,7 +265,6 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
-                        <!-- Okrągły Avatar -->
                         <Grid Grid.Column="0" Width="56" Height="56" HorizontalAlignment="Left" VerticalAlignment="Top">
                             <Ellipse Fill="#2D3748"/>
                             <Path Data="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" 
@@ -291,10 +281,8 @@
                         </Grid>
 
                         <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0">
-                            <!-- Imię i Nazwisko -->
                             <TextBlock Text="{Binding ClientName}" FontSize="18" FontWeight="Bold" Foreground="White" FontFamily="Segoe UI"/>
                             
-                            <!-- Rola i Status -->
                             <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
                                 <Border CornerRadius="4" Padding="6,2" BorderThickness="1" 
                                         Background="{Binding ClientRoleBackground}" 
@@ -323,7 +311,6 @@
 
                         <TextBlock Grid.Row="0" Text="AKTYWNE OFERTY (KARNETY)" FontSize="10" FontWeight="Bold" Foreground="#88FFFFFF" FontFamily="Segoe UI" Margin="0,0,0,8"/>
 
-                        <!-- Lista aktywnych ofert -->
                         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
                             <ItemsControl ItemsSource="{Binding ActiveOffers}">
                                 <ItemsControl.ItemTemplate>
@@ -356,7 +343,6 @@
             </Border>
         </Grid>
 
-        <!-- 4. Przyciski sterujące na dole -->
         <Grid Grid.Row="3" Margin="0,5,0,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>

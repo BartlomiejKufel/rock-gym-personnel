@@ -1,0 +1,82 @@
+\babel@toc {polish}{}\relax 
+\babel@toc {polish}{}\relax 
+\babel@toc {english}{}\relax 
+\babel@toc {polish}{}\relax 
+\contentsline {chapter}{\numberline {1}Wprowadzenie}{10}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Opis analizowanego problemu}{10}{section.1.1}%
+\contentsline {section}{\numberline {1.2}Cel projektu, kontekst i zakres realizacji}{10}{section.1.2}%
+\contentsline {section}{\numberline {1.3}Analiza istniejących rozwiązań}{10}{section.1.3}%
+\contentsline {subsection}{\numberline {1.3.1}WodGuru}{11}{subsection.1.3.1}%
+\contentsline {subsection}{\numberline {1.3.2}eFitness}{11}{subsection.1.3.2}%
+\contentsline {subsection}{\numberline {1.3.3}Perfect Gym}{11}{subsection.1.3.3}%
+\contentsline {subsection}{\numberline {1.3.4}Nowość w projektowanym systemie}{11}{subsection.1.3.4}%
+\contentsline {chapter}{\numberline {2}Wymagania systemowe i założenia}{12}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Wymagania funkcjonalne}{12}{section.2.1}%
+\contentsline {subsection}{\numberline {2.1.1}Wymagania dla Pracownika recepcji}{12}{subsection.2.1.1}%
+\contentsline {subsection}{\numberline {2.1.2}Wymagania dla Administratora (Menadżera)}{12}{subsection.2.1.2}%
+\contentsline {section}{\numberline {2.2}Wymagania niefunkcjonalne}{12}{section.2.2}%
+\contentsline {section}{\numberline {2.3}Założenia i ograniczenia systemu biometrycznego}{13}{section.2.3}%
+\contentsline {chapter}{\numberline {3}Opis koncepcji rozwiązania i zastosowane metody biometryczne}{14}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Ogólna idea działania systemu}{14}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Schemat blokowy przetwarzania danych}{15}{section.3.2}%
+\contentsline {section}{\numberline {3.3}Zastosowane metody i algorytmy}{15}{section.3.3}%
+\contentsline {subsection}{\numberline {3.3.1}Percepcyjne Haszowanie Obrazu (aHash)}{15}{subsection.3.3.1}%
+\contentsline {subsection}{\numberline {3.3.2}Odległość i waga Hamminga w weryfikacji 1:N}{16}{subsection.3.3.2}%
+\contentsline {subsection}{\numberline {3.3.3}Uzasadnienie wyboru zastosowanych metod}{16}{subsection.3.3.3}%
+\contentsline {chapter}{\numberline {4}Architektura i struktura aplikacji}{17}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Architektura aplikacji}{17}{section.4.1}%
+\contentsline {section}{\numberline {4.2}Struktura folderów i organizacja kodu}{17}{section.4.2}%
+\contentsline {section}{\numberline {4.3}Wzorce projektowe, walidacja i obsługa błędów}{18}{section.4.3}%
+\contentsline {chapter}{\numberline {5}Technologie wykorzystane w projekcie}{19}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Technologie interfejsu i dostępu do danych}{19}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Dodatkowe biblioteki i narzędzia}{19}{section.5.2}%
+\contentsline {section}{\numberline {5.3}Uzasadnienie doboru technologii}{20}{section.5.3}%
+\contentsline {chapter}{\numberline {6}Projekt bazy danych}{21}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Opis modelu danych i diagram ERD}{21}{section.6.1}%
+\contentsline {section}{\numberline {6.2}Relacje, klucze i normalizacja bazy danych}{23}{section.6.2}%
+\contentsline {section}{\numberline {6.3}Integralność danych i migracje}{24}{section.6.3}%
+\contentsline {subsection}{\numberline {6.3.1}Bezpieczne przechowywanie danych}{24}{subsection.6.3.1}%
+\contentsline {chapter}{\numberline {7}Implementacja aplikacji}{25}{chapter.7}%
+\contentsline {section}{\numberline {7.1}Logika działania aplikacji i operacje CRUD}{25}{section.7.1}%
+\contentsline {section}{\numberline {7.2}Mechanizmy bezpieczeństwa i autoryzacji biometrycznej}{26}{section.7.2}%
+\contentsline {chapter}{\numberline {8}Prezentacja warstwy użytkowej projektu}{33}{chapter.8}%
+\contentsline {section}{\numberline {8.1}Logowanie i Panel Główny}{33}{section.8.1}%
+\contentsline {subsection}{\numberline {8.1.1}Logowanie do systemu}{33}{subsection.8.1.1}%
+\contentsline {subsection}{\numberline {8.1.2}Panel główny i różnice w uprawnieniach}{33}{subsection.8.1.2}%
+\contentsline {subsection}{\numberline {8.1.3}Pulpit podsumowujący}{34}{subsection.8.1.3}%
+\contentsline {section}{\numberline {8.2}Zarządzanie danymi i funkcje modułów}{35}{section.8.2}%
+\contentsline {subsection}{\numberline {8.2.1}Zarządzanie klientami i personelem}{35}{subsection.8.2.1}%
+\contentsline {subsection}{\numberline {8.2.2}Wydarzenia}{36}{subsection.8.2.2}%
+\contentsline {subsection}{\numberline {8.2.3}Oferta i cennik}{37}{subsection.8.2.3}%
+\contentsline {subsection}{\numberline {8.2.4}Transakcje}{37}{subsection.8.2.4}%
+\contentsline {subsection}{\numberline {8.2.5}Powiadomienia}{38}{subsection.8.2.5}%
+\contentsline {section}{\numberline {8.3}Przykładowe scenariusze działania (biometria i autoryzacja wejść)}{38}{section.8.3}%
+\contentsline {subsection}{\numberline {8.3.1}Zarządzanie wzorcami biometrycznymi}{38}{subsection.8.3.1}%
+\contentsline {subsection}{\numberline {8.3.2}Scenariusz 1: Wejście weryfikowane czytnikiem linii papilarnych}{39}{subsection.8.3.2}%
+\contentsline {subsection}{\numberline {8.3.3}Scenariusz 2: Wejście weryfikowane kodem QR}{41}{subsection.8.3.3}%
+\contentsline {chapter}{\numberline {9}Wyniki i eksperymenty}{43}{chapter.9}%
+\contentsline {section}{\numberline {9.1}Założenia i metodyka testów}{43}{section.9.1}%
+\contentsline {section}{\numberline {9.2}Skuteczność algorytmu i wpływ parametrów}{43}{section.9.2}%
+\contentsline {subsection}{\numberline {9.2.1}Dobór progu akceptacji na poziomie 82\%}{43}{subsection.9.2.1}%
+\contentsline {subsection}{\numberline {9.2.2}Testy ułożenia palca}{44}{subsection.9.2.2}%
+\contentsline {section}{\numberline {9.3}Analiza bezpieczeństwa i podatność na fałszerstwa}{44}{section.9.3}%
+\contentsline {subsection}{\numberline {9.3.1}Próby oszukania systemu}{44}{subsection.9.3.1}%
+\contentsline {subsection}{\numberline {9.3.2}Bezpieczeństwo danych wrażliwych}{45}{subsection.9.3.2}%
+\contentsline {section}{\numberline {9.4}Ewaluacja i błędy identyfikacji w środowisku roboczym}{45}{section.9.4}%
+\contentsline {chapter}{\numberline {10}Harmonogram realizacji projektu}{46}{chapter.10}%
+\contentsline {section}{\numberline {10.1}Główne etapy tworzenia aplikacji}{46}{section.10.1}%
+\contentsline {section}{\numberline {10.2}Wizualizacja harmonogramu}{46}{section.10.2}%
+\contentsline {chapter}{\numberline {11}Instrukcja uruchomienia projektu}{48}{chapter.11}%
+\contentsline {section}{\numberline {11.1}Wymagania systemowe i środowisko programistyczne}{48}{section.11.1}%
+\contentsline {section}{\numberline {11.2}Pobranie projektu i konfiguracja bazy danych}{48}{section.11.2}%
+\contentsline {subsection}{\numberline {11.2.1}Odtworzenie bazy danych z backupu}{48}{subsection.11.2.1}%
+\contentsline {section}{\numberline {11.3}Uruchomienie aplikacji i skanera biometrycznego}{49}{section.11.3}%
+\contentsline {section}{\numberline {11.4}Dane logowania do kont testowych}{49}{section.11.4}%
+\contentsline {chapter}{\numberline {12}Podsumowanie i wnioski końcowe}{50}{chapter.12}%
+\contentsline {section}{\numberline {12.1}Ocena stopnia realizacji założeń projektowych}{50}{section.12.1}%
+\contentsline {section}{\numberline {12.2}Wnioski z działania systemu biometrycznego}{50}{section.12.2}%
+\contentsline {section}{\numberline {12.3}Napotkane problemy i perspektywy rozwoju}{50}{section.12.3}%
+\contentsline {chapter}{Bibliografia}{52}{section.12.3}%
+\contentsline {chapter}{Spis rysunków}{53}{chapter*.27}%
+\contentsline {chapter}{Spis tabel}{54}{chapter*.27}%
+\contentsline {chapter}{Spis listingów}{55}{chapter*.27}%

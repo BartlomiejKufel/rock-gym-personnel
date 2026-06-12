@@ -1,0 +1,26 @@
+\chapter{Technologie wykorzystane w projekcie}
+\label{ch:technologie}
+
+Realizacja systemu do zarządzania ścianką wspinaczkową wymagała doboru odpowiednich technologii oraz bibliotek, które zapewniają stabilność, bezpieczeństwo i elastyczność aplikacji. Zwłaszcza w kontekście integracji z urządzeniami zewnętrznymi, takimi jak kamery.
+
+\section{Technologie interfejsu i dostępu do danych}
+\begin{itemize}
+    \item \textbf{.NET 10 i C\#} -- aplikacja została oparta na platformie .NET 10, co zapewnia wysoką wydajność, bezpieczeństwo oraz dostęp do najnowszych funkcjonalności języka C\#.
+    \item \textbf{WPF (Windows Presentation Foundation)} -- główna technologia interfejsu użytkownika, WPF pozwoliło na stworzenie bogatego i responsywnego interfejsu graficznego. Dzięki zastosowaniu języka XAML oraz mechanizmu bindowania danych (w architekturze MVVM), interfejs jest łatwy w modyfikacji i niezależny od logiki działania aplikacji.
+    \item \textbf{Entity Framework Core 9.0} -- stanowi warstwę dostępu do danych w formie mapowania obiektowo-relacyjnego (ORM). Pozwala na obsługę tabel bazy danych poprzez klasy języka C\# oraz usprawnia proces tworzenia zapytań (przy użyciu LINQ).
+    \item \textbf{MySQL i Pomelo.EntityFrameworkCore.MySql} -- główną bazą danych w projekcie jest MySQL. Do jej połączenia z frameworkiem EF Core użyto biblioteki Pomelo, co zapewnia pełną zgodność obsługiwanych mechanizmów.
+\end{itemize}
+
+\section{Dodatkowe biblioteki i narzędzia}
+Aby zrealizować wymagania postawione przed aplikacją, do projektu dołączono zewnętrzne pakiety NuGet zdefiniowane w pliku konfiguracyjnym \texttt{RockGym.csproj}:
+\begin{itemize}
+    \item \textbf{AForge.Video i AForge.Video.DirectShow} -- te biblioteki posłużyły do obsługi strumieni wideo w czasie rzeczywistym. Dzięki nim aplikacja ma bezpośredni dostęp do kamer zainstalowanych w recepcji, co umożliwia podgląd na żywo podczas skanowania kodów.
+    \item \textbf{ZXing.Net oraz QRCoder} -- pakiet ZXing.Net zaimplementowano w celu rozpoznawania i dekodowania zeskanowanych obrazów, czyli kodów QR, odczytywanych przez kamerę na recepcji. Z kolei biblioteka QRCoder pozwala na generowanie kodów QR przez system.
+    \item \textbf{BCrypt.Net-Next} -- ze względów bezpieczeństwa hasła użytkowników nie są przechowywane w bazie w formie jawnego tekstu. Wykorzystanie funkcji skrótu BCrypt zabezpiecza dane logowania personelu oraz klientów przed atakami z zewnątrz.
+    \item \textbf{ClosedXML} -- biblioteka służąca do tworzenia raportów w formacie \texttt{.xlsx}. W projekcie odpowiada za eksportowanie danych transakcji z danego miesiąca do plików Excel, dając menadżerom możliwość wygodnego raportowania i analizy.
+\end{itemize}
+
+\section{Uzasadnienie doboru technologii}
+Wybór technologii dla aplikacji był podyktowany docelowym środowiskiem uruchomieniowym, którym są zazwyczaj komputery z systemem operacyjnym Windows. Platforma .NET z interfejsem WPF stanowi standard do tworzenia aplikacji typu desktop, pozwalając na pracę ze sprzętem komputerowym, takim jak kamery (co ułatwiły pakiety AForge i ZXing).
+
+Zastosowanie narzędzi, takich jak Entity Framework Core i Pomelo EF Core MySQL, znacząco uprościło zarządzanie bazą danych i pozwoliło skupić się na logice biznesowej, w tym na implementacji modułu biometrycznego.

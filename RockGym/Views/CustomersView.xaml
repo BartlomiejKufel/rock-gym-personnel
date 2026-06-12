@@ -12,7 +12,6 @@
         <BooleanToVisibilityConverter x:Key="BoolToVis"/>
         <services:ByteToImageConverter x:Key="ByteToImageConverter"/>
 
-        <!-- Styl bazowy dla nagłówków w kolumnach -->
         <Style x:Key="BaseHeaderStyle" TargetType="DataGridColumnHeader">
             <Setter Property="Background" Value="#111622"/>
             <Setter Property="Foreground" Value="#A0AEC0"/>
@@ -24,12 +23,10 @@
             <Setter Property="FontSize" Value="12"/>
         </Style>
 
-        <!-- Styl dla nagłówka kolumny "Akcje" -->
         <Style x:Key="CenteredHeaderStyle" TargetType="DataGridColumnHeader" BasedOn="{StaticResource BaseHeaderStyle}">
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
         </Style>
         
-        <!-- Styl dla DataGrid -->
         <Style x:Key="TableViewStyle" TargetType="DataGrid">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="BorderThickness" Value="0"/>
@@ -45,7 +42,6 @@
             <Setter Property="RowBackground" Value="#1A1F26"/>
             <Setter Property="AlternatingRowBackground" Value="#202732"/>
             <Setter Property="ColumnHeaderStyle" Value="{StaticResource BaseHeaderStyle}"/>
-            <!-- Styl dla komórek -->
             <Setter Property="CellStyle">
                 <Setter.Value>
                     <Style TargetType="DataGridCell">
@@ -71,7 +67,6 @@
             </Setter>
         </Style>
 
-        <!-- Styl dla przycisków w tabeli -->
         <Style x:Key="ActionButton" TargetType="Button">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="BorderThickness" Value="0"/>
@@ -109,7 +104,6 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <!-- Nagłówek i kontrolki górne -->
             <Grid Grid.Row="0" Margin="20">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
@@ -174,7 +168,6 @@
                 </StackPanel>
             </Grid>
 
-            <!-- Tabela główna -->
             <Grid Grid.Row="1" Margin="20,0,20,20">
                 <DataGrid ItemsSource="{Binding Customers}" 
                           Style="{StaticResource TableViewStyle}"
@@ -183,14 +176,11 @@
                           Visibility="{Binding ShowTable, Converter={StaticResource BoolToVis}}">
                     
                     <DataGrid.Columns>
-                        <!-- Imię i Nazwisko (ze zdjęciem) -->
                         <DataGridTemplateColumn Header="Imię i nazwisko" Width="2.5*">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                        <!-- Okrągły Avatar -->
                                         <Grid Width="28" Height="28" Margin="0,0,10,0" VerticalAlignment="Center">
-                                            <!-- Fallback Silhouette -->
                                             <Ellipse Fill="#2D3748"/>
                                             <Path Data="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" 
                                                   Fill="#A0AEC0" 
@@ -199,7 +189,6 @@
                                                   HorizontalAlignment="Center" 
                                                   VerticalAlignment="Center"/>
                                             
-                                            <!-- Image Ellipse (clips correctly to circle) -->
                                             <Ellipse Width="28" Height="28">
                                                 <Ellipse.Fill>
                                                     <ImageBrush ImageSource="{Binding ProfilePicture, Converter={StaticResource ByteToImageConverter}}" Stretch="UniformToFill"/>
@@ -216,14 +205,12 @@
                                                 </Ellipse.Style>
                                             </Ellipse>
                                         </Grid>
-                                        <!-- Imię i Nazwisko -->
                                         <TextBlock Text="{Binding FullName}" Foreground="White" FontFamily="Segoe UI" FontSize="13" VerticalAlignment="Center"/>
                                     </StackPanel>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
 
-                        <!-- Rola (Nazwa roli w kolorowym badge'u) -->
                         <DataGridTemplateColumn Header="Rola" Width="1.5*">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
@@ -268,7 +255,6 @@
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
 
-                        <!-- Status obecności -->
                         <DataGridTemplateColumn Header="Status" Width="1.5*">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
@@ -290,7 +276,6 @@
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
 
-                        <!-- E-mail -->
                         <DataGridTextColumn Header="E-mail" 
                                             Binding="{Binding Email}" 
                                             Width="3*">
@@ -303,7 +288,6 @@
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
 
-                        <!-- Aktywne oferty -->
                         <DataGridTextColumn Header="Aktywne oferty" 
                                             Binding="{Binding ActiveOffersCount}" 
                                             Width="1.5*">
@@ -317,12 +301,10 @@
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
 
-                        <!-- Akcje (QR, Odcisk, Edytuj, Usuń) -->
                         <DataGridTemplateColumn Header="Akcje" Width="2.2*" HeaderStyle="{StaticResource CenteredHeaderStyle}">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                        <!-- Generuj QR -->
                                         <Button Style="{StaticResource ActionButton}" 
                                                 ToolTip="Generuj kod QR"
                                                 Command="{Binding DataContext.GenerateQrCodeCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
@@ -345,7 +327,6 @@
                                             </Path>
                                         </Button>
 
-                                        <!-- Rejestruj Odcisk Palca -->
                                         <Button ToolTip="Zarejestruj odcisk palca"
                                                 Command="{Binding DataContext.RegisterFingerprintCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                 CommandParameter="{Binding}"
@@ -363,7 +344,6 @@
                                             </Button.Style>
                                         </Button>
                                         
-                                        <!-- Edytuj -->
                                         <Button Style="{StaticResource ActionButton}" 
                                                 Content="✏" 
                                                 Foreground="#FF7F3F" 
@@ -373,7 +353,6 @@
                                                 IsEnabled="{Binding CanEdit}"
                                                 Margin="0,0,15,0"/>
                                         
-                                        <!-- Usuń (tylko Admin) -->
                                         <Button Style="{StaticResource ActionButton}" 
                                                 Content="🗑" 
                                                 Foreground="#FF5B5B" 
@@ -387,7 +366,6 @@
                         </DataGridTemplateColumn>
                     </DataGrid.Columns>
 
-                    <!-- Rozwijane szczegóły wiersza (Lista aktywnych karnetów) -->
                     <DataGrid.RowDetailsTemplate>
                         <DataTemplate>
                             <Border Background="#1A1F26" BorderThickness="0,1,0,1" BorderBrush="#2D3748" Padding="15">
@@ -399,7 +377,6 @@
                                                Margin="0,0,0,10"
                                                FontFamily="Segoe UI"/>
                                     
-                                    <!-- ItemsControl prezentujący listę -->
                                     <ItemsControl ItemsSource="{Binding ActivePurchases}">
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
@@ -428,7 +405,6 @@
                                         </ItemsControl.ItemTemplate>
                                     </ItemsControl>
                                     
-                                    <!-- Informacja o braku aktywnych ofert -->
                                     <TextBlock Text="Brak aktywnych ofert dla tego użytkownika." 
                                                Foreground="#88FFFFFF" 
                                                FontSize="12" 
@@ -452,7 +428,6 @@
                     </DataGrid.RowDetailsTemplate>
                 </DataGrid>
 
-                <!-- Widok pusty -->
                 <Grid Visibility="{Binding IsEmpty, Converter={StaticResource BoolToVis}}">
                     <Border CornerRadius="8" Background="#1A1F26" BorderThickness="1.5" BorderBrush="#2D3748" Padding="40" VerticalAlignment="Center" HorizontalAlignment="Center">
                         <StackPanel HorizontalAlignment="Center">

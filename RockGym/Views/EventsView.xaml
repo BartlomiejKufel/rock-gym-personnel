@@ -10,7 +10,6 @@
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis"/>
 
-        <!-- Styl bazowy dla nagłówków w kolumnach -->
         <Style x:Key="BaseHeaderStyle" TargetType="DataGridColumnHeader">
             <Setter Property="Background" Value="#111622"/>
             <Setter Property="Foreground" Value="#A0AEC0"/>
@@ -22,12 +21,10 @@
             <Setter Property="FontSize" Value="12"/>
         </Style>
 
-        <!-- Styl dla nagłówka kolumny "Akcje" -->
         <Style x:Key="CenteredHeaderStyle" TargetType="DataGridColumnHeader" BasedOn="{StaticResource BaseHeaderStyle}">
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
         </Style>
         
-        <!-- Styl dla DataGrid -->
         <Style x:Key="TableViewStyle" TargetType="DataGrid">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="BorderThickness" Value="0"/>
@@ -43,7 +40,6 @@
             <Setter Property="RowBackground" Value="#1A1F26"/>
             <Setter Property="AlternatingRowBackground" Value="#202732"/>
             <Setter Property="ColumnHeaderStyle" Value="{StaticResource BaseHeaderStyle}"/>
-            <!-- Styl dla komórek -->
             <Setter Property="CellStyle">
                 <Setter.Value>
                     <Style TargetType="DataGridCell">
@@ -69,7 +65,6 @@
             </Setter>
         </Style>
 
-        <!-- Styl dla przycisków w tabeli -->
         <Style x:Key="ActionButton" TargetType="Button">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="BorderThickness" Value="0"/>
@@ -92,7 +87,6 @@
             </Setter>
         </Style>
 
-        <!-- Styl dla ComboBox -->
         <Style x:Key="ModernComboBox" TargetType="ComboBox">
             <Setter Property="Background" Value="#1A1F26"/>
             <Setter Property="BorderBrush" Value="#2D3748"/>
@@ -181,7 +175,6 @@
             </Setter>
         </Style>
 
-        <!-- Styl dla ComboBoxItem -->
         <Style TargetType="ComboBoxItem">
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="Background" Value="Transparent"/>
@@ -212,7 +205,6 @@
             </Setter>
         </Style>
 
-        <!-- Styl dla TextBox szukaj -->
         <Style x:Key="SearchTextBoxStyle" TargetType="TextBox">
             <Setter Property="Background" Value="#1A1F26"/>
             <Setter Property="BorderBrush" Value="#2D3748"/>
@@ -261,18 +253,14 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <!-- Panel górny -->
             <Grid Grid.Row="0" Margin="20">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
-                    <!-- Przycisk dodaj -->
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="20"/>
-                    <!-- Wyszukiwarka prowadzącego -->
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="20"/>
-                    <!-- Sortowanie -->
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
@@ -284,7 +272,6 @@
                            VerticalAlignment="Center"
                            FontFamily="Segoe UI"/>
 
-                <!-- Dodawanie tylko dla Admina (RoleId == 1) -->
                 <Button Grid.Column="2" 
                         Content="DODAJ NOWE WYDARZENIE" 
                         Command="{Binding AddEventCommand}"
@@ -311,7 +298,6 @@
                     </Button.Template>
                 </Button>
 
-                <!-- Szukaj prowadzącego -->
                 <StackPanel Grid.Column="4" Orientation="Horizontal" VerticalAlignment="Center">
                     <TextBlock Text="Szukaj prowadzącego:" 
                                Foreground="#88FFFFFF" 
@@ -326,7 +312,6 @@
                              Height="35"/>
                 </StackPanel>
 
-                <!-- Sortowanie -->
                 <StackPanel Grid.Column="6" Orientation="Horizontal" VerticalAlignment="Center">
                     <TextBlock Text="Sortuj:" 
                                Foreground="#88FFFFFF" 
@@ -343,7 +328,6 @@
                 </StackPanel>
             </Grid>
 
-            <!-- Tabela danych -->
             <Grid Grid.Row="1" Margin="20,0,20,20">
                 
                 <DataGrid ItemsSource="{Binding Events}" 
@@ -353,7 +337,6 @@
                           Visibility="{Binding ShowTable, Converter={StaticResource BoolToVis}}">
                     <DataGrid.Columns>
                         
-                        <!-- Data rozpoczęcia (Godzina pierwsza) -->
                         <DataGridTextColumn Header="Data rozpoczęcia" 
                                             Binding="{Binding StartDate, StringFormat=\{0:HH:mm dd.MM.yyyy r.\}}" 
                                             Width="1.5*">
@@ -366,14 +349,11 @@
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
 
-                        <!-- Prowadzący ze zdjęciem i nazwą -->
                         <DataGridTemplateColumn Header="Prowadzący" Width="2*">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                        <!-- Okrągły Avatar -->
                                         <Grid Width="28" Height="28" Margin="0,0,10,0" VerticalAlignment="Center">
-                                            <!-- Fallback Silhouette -->
                                             <Ellipse Fill="#2D3748"/>
                                             <Path Data="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" 
                                                   Fill="#A0AEC0" 
@@ -382,7 +362,6 @@
                                                   HorizontalAlignment="Center" 
                                                   VerticalAlignment="Center"/>
                                             
-                                            <!-- Image Ellipse (clips correctly to circle) -->
                                             <Ellipse Width="28" Height="28">
                                                 <Ellipse.Fill>
                                                     <ImageBrush ImageSource="{Binding Instructor.ProfilePicture, Converter={StaticResource ByteToImageConverter}}" Stretch="UniformToFill"/>
@@ -399,7 +378,6 @@
                                                 </Ellipse.Style>
                                             </Ellipse>
                                         </Grid>
-                                        <!-- Imię i nazwisko prowadzącego -->
                                         <TextBlock VerticalAlignment="Center" FontFamily="Segoe UI" FontSize="13">
                                             <TextBlock.Text>
                                                 <MultiBinding StringFormat="{}{0} {1}">
@@ -413,7 +391,6 @@
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
 
-                        <!-- Nazwa -->
                         <DataGridTextColumn Header="Nazwa" 
                                             Binding="{Binding Name}" 
                                             Width="2*">
@@ -428,7 +405,6 @@
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
 
-                        <!-- Opis -->
                         <DataGridTextColumn Header="Opis" 
                                             Binding="{Binding Description}" 
                                             Width="2.5*">
@@ -443,7 +419,6 @@
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
 
-                        <!-- Uczestnicy -->
                         <DataGridTextColumn Header="Uczestnicy" 
                                             Binding="{Binding ParticipantsRatio}" 
                                             Width="1*">
@@ -456,7 +431,6 @@
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
 
-                        <!-- Data końca (Godzina pierwsza) -->
                         <DataGridTextColumn Header="Data końca" 
                                             Binding="{Binding EndDate, StringFormat=\{0:HH:mm dd.MM.yyyy r.\}}" 
                                             Width="1.5*">
@@ -469,12 +443,10 @@
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
 
-                        <!-- Akcje (Edycja dla wszystkich, Usuwanie tylko dla Admina) -->
                         <DataGridTemplateColumn Header="Akcje" Width="1.2*" HeaderStyle="{StaticResource CenteredHeaderStyle}">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                        <!-- Edycja ołówkiem -->
                                         <Button Style="{StaticResource ActionButton}" 
                                                 Content="✏" 
                                                 Foreground="#FF7F3F" 
@@ -483,7 +455,6 @@
                                                 CommandParameter="{Binding}"
                                                 Margin="0,0,15,0"/>
                                         
-                                        <!-- Usuwanie koszem (dostępne tylko dla Admina) -->
                                         <Button Style="{StaticResource ActionButton}" 
                                                 Content="🗑" 
                                                 Foreground="#FF5B5B" 
@@ -497,7 +468,6 @@
                         </DataGridTemplateColumn>
                     </DataGrid.Columns>
 
-                    <!-- Rozwijane szczegóły wiersza (Lista uczestników ze zdjęciami) -->
                     <DataGrid.RowDetailsTemplate>
                         <DataTemplate>
                             <Border Background="#1A1F26" BorderThickness="0,1,0,1" BorderBrush="#2D3748" Padding="15">
@@ -509,7 +479,6 @@
                                                Margin="0,0,0,10"
                                                FontFamily="Segoe UI"/>
                                     
-                                    <!-- ItemsControl prezentujący listę -->
                                     <ItemsControl ItemsSource="{Binding EventParticipants}">
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
@@ -520,9 +489,7 @@
                                                             <ColumnDefinition Width="*"/>
                                                         </Grid.ColumnDefinitions>
                                                         
-                                                        <!-- Zdjęcie uczestnika -->
                                                         <Grid Grid.Column="0" Width="24" Height="24" Margin="0,0,10,0" VerticalAlignment="Center">
-                                                            <!-- Fallback Silhouette -->
                                                             <Ellipse Fill="#2D3748"/>
                                                             <Path Data="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" 
                                                                   Fill="#A0AEC0" 
@@ -531,7 +498,6 @@
                                                                   HorizontalAlignment="Center" 
                                                                   VerticalAlignment="Center"/>
                                                             
-                                                            <!-- Image Ellipse (clips correctly to circle) -->
                                                             <Ellipse Width="24" Height="24">
                                                                 <Ellipse.Fill>
                                                                     <ImageBrush ImageSource="{Binding Participant.ProfilePicture, Converter={StaticResource ByteToImageConverter}}" Stretch="UniformToFill"/>
@@ -549,7 +515,6 @@
                                                             </Ellipse>
                                                         </Grid>
                                                         
-                                                        <!-- Imię i Nazwisko -->
                                                         <TextBlock Grid.Column="1" 
                                                                    Text="{Binding Participant.FullName}" 
                                                                    Foreground="White" 
@@ -563,7 +528,6 @@
                                         </ItemsControl.ItemTemplate>
                                     </ItemsControl>
                                     
-                                    <!-- Informacja o braku zapisanych osób -->
                                     <TextBlock Text="Brak zapisanych uczestników na to wydarzenie." 
                                                Foreground="#88FFFFFF" 
                                                FontSize="12" 
@@ -587,7 +551,6 @@
                     </DataGrid.RowDetailsTemplate>
                 </DataGrid>
 
-                <!-- Karta informacji przy braku wydarzeń -->
                 <Grid Visibility="{Binding IsEmpty, Converter={StaticResource BoolToVis}}">
                     <Border CornerRadius="8" Background="#1A1F26" BorderThickness="1.5" BorderBrush="#2D3748" Padding="40" VerticalAlignment="Center" HorizontalAlignment="Center">
                         <StackPanel HorizontalAlignment="Center">

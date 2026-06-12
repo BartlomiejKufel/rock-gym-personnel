@@ -11,7 +11,6 @@
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis"/>
 
-        <!-- Styl bazowy dla nagłówków w kolumnach -->
         <Style x:Key="BaseHeaderStyle" TargetType="DataGridColumnHeader">
             <Setter Property="Background" Value="#111622"/>
             <Setter Property="Foreground" Value="#A0AEC0"/>
@@ -23,12 +22,10 @@
             <Setter Property="FontSize" Value="12"/>
         </Style>
 
-        <!-- Styl dla nagłówka kolumny "Akcje" -->
         <Style x:Key="CenteredHeaderStyle" TargetType="DataGridColumnHeader" BasedOn="{StaticResource BaseHeaderStyle}">
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
         </Style>
         
-        <!-- Styl dla DataGrid -->
         <Style x:Key="TableViewStyle" TargetType="DataGrid">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="BorderThickness" Value="0"/>
@@ -44,7 +41,6 @@
             <Setter Property="RowBackground" Value="#1A1F26"/>
             <Setter Property="AlternatingRowBackground" Value="#202732"/>
             <Setter Property="ColumnHeaderStyle" Value="{StaticResource BaseHeaderStyle}"/>
-            <!-- Styl dla komórek -->
             <Setter Property="CellStyle">
                 <Setter.Value>
                     <Style TargetType="DataGridCell">
@@ -70,7 +66,6 @@
             </Setter>
         </Style>
 
-        <!-- Styl dla przycisków w tabeli -->
         <Style x:Key="ActionButton" TargetType="Button">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="BorderThickness" Value="0"/>
@@ -105,7 +100,6 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <!-- Nagłówek i przycisk dodawania (widoczny tylko dla admina) -->
             <Grid Grid.Row="0" Margin="20">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
@@ -148,9 +142,7 @@
                 </Button>
             </Grid>
 
-            <!-- Główna zawartość: Tabela / Komunikat o braku rekordów -->
             <Grid Grid.Row="1" Margin="20,0,20,20">
-                
                 <DataGrid x:Name="OffersDataGrid"
                           ItemsSource="{Binding Offers}" 
                           Style="{StaticResource TableViewStyle}"
@@ -193,7 +185,6 @@
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
 
-                        <!-- Kolumna akcji (Edycja/Usuwanie) sterowana w code-behind (ukrywana dla nie-adminów) -->
                         <DataGridTemplateColumn x:Name="ActionsColumn" Header="Akcje" Width="1.2*" HeaderStyle="{StaticResource CenteredHeaderStyle}">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
@@ -219,7 +210,6 @@
                     </DataGrid.Columns>
                 </DataGrid>
 
-                <!-- Karta informacji przy braku ofert -->
                 <Grid Visibility="{Binding IsEmpty, Converter={StaticResource BoolToVis}}">
                     <Border CornerRadius="8" Background="#1A1F26" BorderThickness="1.5" BorderBrush="#2D3748" Padding="40" VerticalAlignment="Center" HorizontalAlignment="Center">
                         <StackPanel HorizontalAlignment="Center">

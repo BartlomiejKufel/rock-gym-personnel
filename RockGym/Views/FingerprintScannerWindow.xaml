@@ -18,7 +18,6 @@
         <BooleanToVisibilityConverter x:Key="BoolToVis"/>
         <services:ByteToImageConverter x:Key="ByteToImageConverter"/>
 
-        <!-- Style dla przycisków w oknie -->
         <Style x:Key="ScannerButton" TargetType="Button">
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="BorderThickness" Value="0"/>
@@ -63,13 +62,12 @@
 
     <Grid Margin="20">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/> <!-- Nagłówek i przycisk wczytania -->
-            <RowDefinition Height="280"/> <!-- Próbka odcisku -->
-            <RowDefinition Height="*"/>    <!-- Szczegóły pasującego klienta -->
-            <RowDefinition Height="Auto"/> <!-- Przyciski na dole -->
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="280"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <!-- 1. Nagłówek i przycisk wczytywania próbki -->
         <Grid Grid.Row="0" Margin="0,0,0,15">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
@@ -90,10 +88,8 @@
                     Click="UploadSampleButton_Click"/>
         </Grid>
 
-        <!-- 2. Kontener podglądu odcisku palca -->
         <Border Grid.Row="1" Background="#1A1F26" CornerRadius="8" BorderBrush="#2D3748" BorderThickness="2" ClipToBounds="True">
             <Grid>
-                <!-- Znak wodny / tło, gdy brak odcisku -->
                 <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                     <TextBlock Text="👆" FontSize="48" HorizontalAlignment="Center" Opacity="0.15"/>
                     <TextBlock Text="Brak załadowanej próbki" Foreground="#44FFFFFF" FontSize="12" FontFamily="Segoe UI" HorizontalAlignment="Center" Margin="0,8,0,0"/>
@@ -109,35 +105,12 @@
                     </StackPanel.Style>
                 </StackPanel>
 
-                <!-- Obrazek odcisku -->
                 <Image x:Name="FingerprintImage" 
                        Source="{Binding FingerprintPreview, Converter={StaticResource ByteToImageConverter}}" 
                        Stretch="Uniform" 
                        Margin="25"
                        RenderOptions.BitmapScalingMode="HighQuality"/>
 
-                <!-- Celownik skanera odcisków -->
-                <Grid x:Name="ScannerTarget">
-                    <Border BorderBrush="#55FF7F3F" BorderThickness="1.5" Margin="50" CornerRadius="10">
-                        <Grid>
-                            <!-- Narożniki celownika -->
-                            <Path Data="M0,15 L0,0 L15,0" Stroke="#FF7F3F" StrokeThickness="3.5" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-                            <Path Data="M0,0 L15,0 L15,15" Stroke="#FF7F3F" StrokeThickness="3.5" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,0,-2,0"/>
-                            <Path Data="M0,15 L0,0 L15,0" Stroke="#FF7F3F" StrokeThickness="3.5" HorizontalAlignment="Left" VerticalAlignment="Bottom" RenderTransformOrigin="0.5,0.5">
-                                <Path.RenderTransform>
-                                     <ScaleTransform ScaleY="-1"/>
-                                </Path.RenderTransform>
-                            </Path>
-                            <Path Data="M0,0 L15,0 L15,15" Stroke="#FF7F3F" StrokeThickness="3.5" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,-2,0" RenderTransformOrigin="0.5,0.5">
-                                <Path.RenderTransform>
-                                    <ScaleTransform ScaleY="-1"/>
-                                </Path.RenderTransform>
-                            </Path>
-                        </Grid>
-                    </Border>
-                </Grid>
-
-                <!-- Pasek wskaźnika prawdopodobieństwa w lewym górnym rogu podglądu -->
                 <Border Background="#CC111622" CornerRadius="4" Padding="8,4" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10">
                     <TextBlock Text="{Binding MatchProbabilityText, FallbackValue='Oczekiwanie...'}" 
                                Foreground="{Binding MatchProbabilityColor}" 
@@ -158,9 +131,7 @@
             </Grid>
         </Border>
 
-        <!-- 3. Szczegóły klienta -->
         <Grid Grid.Row="2" Margin="0,15,0,15">
-            <!-- Pusta karta przed dopasowaniem -->
             <Border x:Name="EmptyCard" Background="#1A1F26" BorderBrush="#2D3748" BorderThickness="1.5" CornerRadius="8" Padding="20" Visibility="{Binding EmptyCardVisibility}">
                 <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                     <TextBlock Text="🔍" FontSize="36" HorizontalAlignment="Center"/>
@@ -169,13 +140,12 @@
                 </StackPanel>
             </Border>
 
-            <!-- Karta Klienta (po dopasowaniu) -->
             <Border x:Name="ClientCard" Background="#1A1F26" BorderBrush="#2D3748" BorderThickness="1.5" CornerRadius="8" Padding="15" Visibility="{Binding ClientCardVisibility}">
                 <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/> <!-- Avatar, imię, rola, status -->
-                        <RowDefinition Height="Auto"/> <!-- Separator -->
-                        <RowDefinition Height="*"/>    <!-- Oferty / wejścia -->
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
                     <Grid Grid.Row="0">
@@ -184,7 +154,6 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
-                        <!-- Okrągły Avatar -->
                         <Grid Grid.Column="0" Width="56" Height="56" HorizontalAlignment="Left" VerticalAlignment="Top">
                             <Ellipse Fill="#2D3748"/>
                             <Path Data="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" 
@@ -201,10 +170,8 @@
                         </Grid>
 
                         <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0">
-                            <!-- Imię i Nazwisko -->
                             <TextBlock Text="{Binding ClientName}" FontSize="18" FontWeight="Bold" Foreground="White" FontFamily="Segoe UI"/>
                             
-                            <!-- Rola i Status -->
                             <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
                                 <Border CornerRadius="4" Padding="6,2" BorderThickness="1" 
                                         Background="{Binding ClientRoleBackground}" 
@@ -233,7 +200,6 @@
 
                         <TextBlock Grid.Row="0" Text="AKTYWNE OFERTY (KARNETY)" FontSize="10" FontWeight="Bold" Foreground="#88FFFFFF" FontFamily="Segoe UI" Margin="0,0,0,8"/>
 
-                        <!-- Lista aktywnych ofert -->
                         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
                             <ItemsControl ItemsSource="{Binding ActiveOffers}">
                                 <ItemsControl.ItemTemplate>
@@ -266,7 +232,6 @@
             </Border>
         </Grid>
 
-        <!-- 4. Przyciski sterujące na dole -->
         <Grid Grid.Row="3" Margin="0,5,0,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
@@ -274,7 +239,6 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
-            <!-- Przycisk Wpuszczenia Klienta -->
             <Button x:Name="RegisterEntranceButton" 
                     Grid.Column="0" 
                     Content="Wpuść klienta" 
@@ -283,7 +247,6 @@
                     Command="{Binding RegisterEntranceCommand}"
                     Margin="0,0,10,0"/>
 
-            <!-- Przycisk Ponownego Skanowania -->
             <Button x:Name="ResumeButton" 
                     Grid.Column="1" 
                     Content="Zeskanuj ponownie" 

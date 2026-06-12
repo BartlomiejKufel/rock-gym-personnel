@@ -1,0 +1,82 @@
+This is BibTeX, Version 0.99e
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: praca.aux
+Reallocating 'name_of_file' (item size: 1) to 25 items.
+A level-1 auxiliary file: chapters/abstract-pl.aux
+Reallocating 'name_of_file' (item size: 1) to 25 items.
+A level-1 auxiliary file: chapters/abstract-en.aux
+Reallocating 'name_of_file' (item size: 1) to 24 items.
+A level-1 auxiliary file: chapters/chapter001.aux
+Reallocating 'name_of_file' (item size: 1) to 24 items.
+A level-1 auxiliary file: chapters/chapter002.aux
+Reallocating 'name_of_file' (item size: 1) to 24 items.
+A level-1 auxiliary file: chapters/chapter003.aux
+Reallocating 'name_of_file' (item size: 1) to 24 items.
+A level-1 auxiliary file: chapters/chapter004.aux
+Reallocating 'name_of_file' (item size: 1) to 24 items.
+A level-1 auxiliary file: chapters/chapter005.aux
+Reallocating 'name_of_file' (item size: 1) to 24 items.
+A level-1 auxiliary file: chapters/chapter006.aux
+Reallocating 'name_of_file' (item size: 1) to 24 items.
+A level-1 auxiliary file: chapters/chapter007.aux
+Reallocating 'name_of_file' (item size: 1) to 24 items.
+A level-1 auxiliary file: chapters/chapter008.aux
+Reallocating 'name_of_file' (item size: 1) to 24 items.
+A level-1 auxiliary file: chapters/chapter009.aux
+Reallocating 'name_of_file' (item size: 1) to 24 items.
+A level-1 auxiliary file: chapters/chapter010.aux
+Reallocating 'name_of_file' (item size: 1) to 24 items.
+A level-1 auxiliary file: chapters/chapter011.aux
+Reallocating 'name_of_file' (item size: 1) to 24 items.
+A level-1 auxiliary file: chapters/chapter012.aux
+Reallocating 'name_of_file' (item size: 1) to 6 items.
+The style file: plain.bst
+Reallocating 'name_of_file' (item size: 1) to 13 items.
+Database file #1: bibliografia.bib
+Warning--to sort, need author or key in WodGuru
+Warning--to sort, need author or key in eFitness
+Warning--to sort, need author or key in PerfectGym
+Warning--to sort, need author or key in HammingDistanceDataCamp
+Warning--to sort, need author or key in FutronicFS80H
+You've used 9 entries,
+            2118 wiz_defined-function locations,
+            556 strings with 5684 characters,
+and the built_in function-call counts, 1722 in all, are:
+= -- 176
+> -- 33
+< -- 0
++ -- 18
+- -- 8
+* -- 56
+:= -- 256
+add.period$ -- 30
+call.type$ -- 9
+change.case$ -- 31
+chr.to.int$ -- 0
+cite$ -- 14
+duplicate$ -- 64
+empty$ -- 197
+format.name$ -- 8
+if$ -- 398
+int.to.chr$ -- 0
+int.to.str$ -- 9
+missing$ -- 0
+newline$ -- 51
+num.names$ -- 8
+pop$ -- 67
+preamble$ -- 1
+purify$ -- 22
+quote$ -- 0
+skip$ -- 54
+stack$ -- 0
+substring$ -- 46
+swap$ -- 9
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 36
+warning$ -- 5
+while$ -- 8
+width$ -- 10
+write$ -- 98
+(There were 5 warnings)

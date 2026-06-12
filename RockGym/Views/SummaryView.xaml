@@ -11,7 +11,6 @@
     <UserControl.Resources>
         <services:ByteToImageConverter x:Key="ByteToImageConverter"/>
 
-        <!-- Styl dla DatePicker -->
         <Style x:Key="DialogDatePicker" TargetType="DatePicker">
             <Setter Property="Background" Value="#1A1F26"/>
             <Setter Property="BorderBrush" Value="#2D3748"/>
@@ -37,7 +36,6 @@
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
 
-                                <!-- Pole tekstowe -->
                                 <DatePickerTextBox x:Name="PART_TextBox"
                                                    Grid.Column="0"
                                                    Focusable="{TemplateBinding Focusable}"
@@ -52,7 +50,6 @@
                                                    CaretBrush="#FF7F3F"
                                                    SelectionBrush="#4A5568"/>
 
-                                 <!-- Przycisk kalendarza -->
                                 <Button x:Name="PART_Button"
                                         Grid.Column="1"
                                         Width="30"
@@ -74,7 +71,6 @@
                                     </Button.Template>
                                 </Button>
 
-                                <!-- Popup do wysuwania kalendarza -->
                                 <Popup x:Name="PART_Popup"
                                        AllowsTransparency="True"
                                        Placement="Bottom"
@@ -107,7 +103,6 @@
             </Style.Resources>
         </Style>
 
-        <!-- Styl dla przycisku pobierania wyciągów -->
         <Style x:Key="DownloadButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="#FF7F3F"/>
             <Setter Property="Foreground" Value="White"/>
@@ -144,7 +139,6 @@
             </Setter>
         </Style>
 
-        <!-- Styl bazowy dla nagłówków w kolumnach -->
         <Style x:Key="BaseHeaderStyle" TargetType="DataGridColumnHeader">
             <Setter Property="Background" Value="#111622"/>
             <Setter Property="Foreground" Value="#A0AEC0"/>
@@ -156,7 +150,6 @@
             <Setter Property="FontSize" Value="12"/>
         </Style>
 
-        <!-- Styl dla DataGrid -->
         <Style x:Key="TableViewStyle" TargetType="DataGrid">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="BorderThickness" Value="0"/>
@@ -199,7 +192,6 @@
     </UserControl.Resources>
 
     <Grid>
-        <!-- Tło z przyciemnioną ścianką wspinaczkową (tak jak na innych widokach) -->
         <Grid.Background>
             <ImageBrush ImageSource="pack://application:,,,/Assets/main-wall.jpg" Stretch="UniformToFill"/>
         </Grid.Background>
@@ -210,7 +202,6 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <!-- 1. Nagłówek panelu z DatePickerem -->
             <Grid Grid.Row="0" Margin="20">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
@@ -241,11 +232,9 @@
                 </StackPanel>
             </Grid>
 
-            <!-- 2. Zawartość Dashboardu w ScrollViewerze -->
             <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="20,0,20,20">
                 <StackPanel>
                     
-                    <!-- SEKCJA: STATYSTYKI Z WYBRANEGO DNIA -->
                     <TextBlock Text="{Binding SelectedDayName, StringFormat='Podsumowanie dnia ({0})'}" 
                                Foreground="#FF7F3F" 
                                FontSize="16" 
@@ -264,7 +253,6 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
-                        <!-- Karta 1: Dzisiejszy utarg -->
                         <Border Grid.Column="0" Background="#1A1F26" BorderBrush="#2D3748" BorderThickness="1.5" CornerRadius="8" Padding="18,15">
                             <StackPanel>
                                 <TextBlock Text="UTARG Z WYBRANEGO DNIA" FontSize="10" Foreground="#88FFFFFF" FontWeight="Bold" FontFamily="Segoe UI"/>
@@ -272,7 +260,6 @@
                             </StackPanel>
                         </Border>
 
-                        <!-- Karta 2: Liczba transakcji dzisiaj -->
                         <Border Grid.Column="2" Background="#1A1F26" BorderBrush="#2D3748" BorderThickness="1.5" CornerRadius="8" Padding="18,15">
                             <StackPanel>
                                 <TextBlock Text="LICZBA TRANSAKCJI" FontSize="10" Foreground="#88FFFFFF" FontWeight="Bold" FontFamily="Segoe UI"/>
@@ -280,7 +267,6 @@
                             </StackPanel>
                         </Border>
 
-                        <!-- Karta 3: Dzisiejsze wejścia -->
                         <Border Grid.Column="4" Background="#1A1F26" BorderBrush="#2D3748" BorderThickness="1.5" CornerRadius="8" Padding="18,15">
                             <StackPanel>
                                 <TextBlock Text="WEJŚCIA Z WYBRANEGO DNIA" FontSize="10" Foreground="#88FFFFFF" FontWeight="Bold" FontFamily="Segoe UI"/>
@@ -288,7 +274,6 @@
                             </StackPanel>
                         </Border>
 
-                        <!-- Karta 4: Osoby obecnie w klubie -->
                         <Border Grid.Column="6" Background="#1A1F26" BorderBrush="#2D3748" BorderThickness="1.5" CornerRadius="8" Padding="18,15">
                             <StackPanel>
                                 <TextBlock Text="OBECNI W WYBRANYM DNIU" FontSize="10" Foreground="#88FFFFFF" FontWeight="Bold" FontFamily="Segoe UI"/>
@@ -297,7 +282,6 @@
                         </Border>
                     </Grid>
 
-                    <!-- SEKCJA: PODSUMOWANIE MIESIĄCA -->
                     <Grid Margin="0,0,0,12">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
@@ -305,7 +289,7 @@
                         </Grid.ColumnDefinitions>
                         
                         <TextBlock Grid.Column="0"
-                                   Text="{Binding SelectedMonthYearName, StringFormat='Podsumowanie miesiąca ({0})'}" 
+                                   Text="{Binding SelectedMonthYearName, StringFormat='Podsumowanie miasta ({0})'}" 
                                    Foreground="#FF7F3F" 
                                    FontSize="16" 
                                    FontWeight="Bold" 
@@ -328,7 +312,6 @@
                             <ColumnDefinition Width="1.5*"/>
                         </Grid.ColumnDefinitions>
 
-                        <!-- Karta 1: Utarg w tym miesiącu -->
                         <Border Grid.Column="0" Background="#1A1F26" BorderBrush="#2D3748" BorderThickness="1.5" CornerRadius="8" Padding="18,15">
                             <StackPanel>
                                 <TextBlock Text="UTARG W TYM MIESIĄCU" FontSize="10" Foreground="#88FFFFFF" FontWeight="Bold" FontFamily="Segoe UI"/>
@@ -336,7 +319,6 @@
                             </StackPanel>
                         </Border>
 
-                        <!-- Karta 2: Transakcje w tym miesiącu -->
                         <Border Grid.Column="2" Background="#1A1F26" BorderBrush="#2D3748" BorderThickness="1.5" CornerRadius="8" Padding="18,15">
                             <StackPanel>
                                 <TextBlock Text="TRANSAKCJE W TYM MIESIĄCU" FontSize="10" Foreground="#88FFFFFF" FontWeight="Bold" FontFamily="Segoe UI"/>
@@ -344,7 +326,6 @@
                             </StackPanel>
                         </Border>
 
-                        <!-- Karta 3: Najpopularniejsza oferta -->
                         <Border Grid.Column="4" Background="#1A1F26" BorderBrush="#2D3748" BorderThickness="1.5" CornerRadius="8" Padding="18,15">
                             <StackPanel>
                                 <TextBlock Text="NAJPOPULARNIEJSZA OFERTA" FontSize="10" Foreground="#88FFFFFF" FontWeight="Bold" FontFamily="Segoe UI"/>
@@ -353,7 +334,6 @@
                         </Border>
                     </Grid>
 
-                    <!-- SEKCJA: UTARG DZIENNY PERSONELU I INTERNETU -->
                     <TextBlock Text="{Binding SelectedDayName, StringFormat='Utarg z dnia {0}'}" 
                                Foreground="#FF7F3F" 
                                FontSize="16" 
@@ -369,21 +349,16 @@
                                   HeadersVisibility="Column">
                             
                             <DataGrid.Columns>
-                                <!-- Osoba (Pracownik lub Internet) -->
                                 <DataGridTemplateColumn Header="Osoba" Width="3*">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                                <!-- Ikonka/Avatar użytkownika -->
                                                 <Grid Width="28" Height="28" Margin="0,0,10,0" VerticalAlignment="Center">
-                                                    <!-- Gdy zakup przez internet (IsInternet = True) -->
                                                     <Grid Visibility="Collapsed" x:Name="InternetGrid">
                                                         <TextBlock Text="🌐" FontSize="16" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                                                     </Grid>
                                                     
-                                                    <!-- Gdy pracownik (IsInternet = False) -->
                                                     <Grid x:Name="StaffGrid">
-                                                        <!-- Fallback Silhouette -->
                                                         <Ellipse Fill="#2D3748"/>
                                                         <Path Data="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" 
                                                               Fill="#A0AEC0" 
@@ -392,7 +367,6 @@
                                                               HorizontalAlignment="Center" 
                                                               VerticalAlignment="Center"/>
                                                         
-                                                        <!-- Image Ellipse -->
                                                         <Ellipse Width="28" Height="28">
                                                             <Ellipse.Fill>
                                                                 <ImageBrush ImageSource="{Binding ProfilePicture, Converter={StaticResource ByteToImageConverter}}" Stretch="UniformToFill"/>
@@ -426,7 +400,6 @@
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
 
-                                <!-- Rola (Badge) -->
                                 <DataGridTemplateColumn Header="Rola" Width="2*">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
@@ -442,19 +415,16 @@
                                                            FontWeight="Bold"/>
                                             </Border>
                                             <DataTemplate.Triggers>
-                                                <!-- Admin (RoleId = 1) -->
                                                 <DataTrigger Binding="{Binding RoleId}" Value="1">
                                                     <Setter TargetName="RoleBadge" Property="Background" Value="#3A1E1E"/>
                                                     <Setter TargetName="RoleBadge" Property="BorderBrush" Value="#5A2C2C"/>
                                                     <Setter TargetName="RoleBadge" Property="TextBlock.Foreground" Value="#FF8E8E"/>
                                                 </DataTrigger>
-                                                <!-- Pracownik (RoleId = 2) -->
                                                 <DataTrigger Binding="{Binding RoleId}" Value="2">
                                                     <Setter TargetName="RoleBadge" Property="Background" Value="#1A2E3E"/>
                                                     <Setter TargetName="RoleBadge" Property="BorderBrush" Value="#2C4C66"/>
                                                     <Setter TargetName="RoleBadge" Property="TextBlock.Foreground" Value="#8EC5FF"/>
                                                 </DataTrigger>
-                                                <!-- Internet (IsInternet = True) -->
                                                 <DataTrigger Binding="{Binding IsInternet}" Value="True">
                                                     <Setter TargetName="RoleBadge" Property="Background" Value="#1A1F26"/>
                                                     <Setter TargetName="RoleBadge" Property="BorderBrush" Value="#2D3748"/>
@@ -465,7 +435,6 @@
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
 
-                                <!-- Dzisiejszy utarg -->
                                 <DataGridTextColumn Header="Dzisiejszy utarg" 
                                                     Binding="{Binding FormattedRevenue}" 
                                                     Width="2*">

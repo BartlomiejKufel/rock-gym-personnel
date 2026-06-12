@@ -16,7 +16,6 @@
         Foreground="White">
 
     <Window.Resources>
-        <!-- Style dla TextBox -->
         <Style x:Key="DialogTextBox" TargetType="TextBox">
             <Setter Property="Background" Value="#1A1F26"/>
             <Setter Property="BorderBrush" Value="#2D3748"/>
@@ -52,7 +51,6 @@
             </Setter>
         </Style>
 
-        <!-- Style dla przycisków -->
         <Style x:Key="DialogButton" TargetType="Button">
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="BorderThickness" Value="0"/>
@@ -75,7 +73,6 @@
             </Setter>
         </Style>
 
-        <!-- Przycisk Zapisz -->
         <Style x:Key="SaveButton" TargetType="Button" BasedOn="{StaticResource DialogButton}">
             <Setter Property="Background" Value="#FF7F3F"/>
             <Style.Triggers>
@@ -86,7 +83,6 @@
             </Style.Triggers>
         </Style>
 
-        <!-- Przycisk Anuluj -->
         <Style x:Key="CancelButton" TargetType="Button" BasedOn="{StaticResource DialogButton}">
             <Setter Property="Background" Value="#2D3748"/>
             <Style.Triggers>
@@ -97,7 +93,6 @@
             </Style.Triggers>
         </Style>
 
-        <!-- Styl dla DatePicker -->
         <Style x:Key="DialogDatePicker" TargetType="DatePicker">
             <Setter Property="Background" Value="#1A1F26"/>
             <Setter Property="BorderBrush" Value="#2D3748"/>
@@ -123,7 +118,6 @@
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
 
-                                <!-- Pole tekstowe -->
                                 <DatePickerTextBox x:Name="PART_TextBox"
                                                    Grid.Column="0"
                                                    Focusable="{TemplateBinding Focusable}"
@@ -137,7 +131,7 @@
                                                    FontFamily="{TemplateBinding FontFamily}"
                                                    CaretBrush="#FF7F3F"
                                                    SelectionBrush="#4A5568"/>
-                                 <!-- Przycisk kalendarza -->
+
                                 <Button x:Name="PART_Button"
                                         Grid.Column="1"
                                         Width="30"
@@ -159,7 +153,6 @@
                                     </Button.Template>
                                 </Button>
 
-                                <!-- Popup do wysuwania kalendarza -->
                                 <Popup x:Name="PART_Popup"
                                        AllowsTransparency="True"
                                        Placement="Bottom"
@@ -192,7 +185,6 @@
             </Style.Resources>
         </Style>
 
-        <!-- Styl dla ComboBox -->
         <Style x:Key="DialogComboBox" TargetType="ComboBox">
             <Setter Property="Background" Value="#1A1F26"/>
             <Setter Property="BorderBrush" Value="#2D3748"/>
@@ -212,7 +204,6 @@
                                 <ColumnDefinition Width="30"/>
                             </Grid.ColumnDefinitions>
                             
-                            <!-- Border tła -->
                             <Border x:Name="border"
                                     Grid.ColumnSpan="2"
                                     CornerRadius="6"
@@ -221,7 +212,6 @@
                                     BorderThickness="{TemplateBinding BorderThickness}"
                                     SnapsToDevicePixels="True"/>
                             
-                            <!-- TextBox do wpisywania -->
                             <TextBox x:Name="PART_EditableTextBox"
                                      Grid.Column="0"
                                      Style="{x:Null}"
@@ -235,7 +225,6 @@
                                      CaretBrush="#FF7F3F"
                                      SelectionBrush="#4A5568"/>
                             
-                            <!-- Przycisk rozwijania -->
                             <ToggleButton x:Name="toggleButton"
                                           Grid.Column="1"
                                           Background="Transparent"
@@ -255,7 +244,6 @@
                                 </ToggleButton.Template>
                             </ToggleButton>
 
-                            <!-- Popup z listą opcji -->
                             <Popup x:Name="PART_Popup"
                                    Grid.ColumnSpan="2"
                                    Placement="Bottom"
@@ -294,7 +282,6 @@
             </Setter>
         </Style>
 
-        <!-- Styl dla ComboBoxItem -->
         <Style TargetType="ComboBoxItem">
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="Background" Value="Transparent"/>
@@ -328,12 +315,11 @@
 
     <Grid Margin="25">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/> <!-- Nagłówek -->
-            <RowDefinition Height="*"/>    <!-- Formularz -->
-            <RowDefinition Height="Auto"/> <!-- Przyciski -->
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <!-- 1. Nagłówek -->
         <TextBlock x:Name="HeaderTextBlock"
                    Text="Dodaj transakcję"
                    FontSize="20"
@@ -342,9 +328,7 @@
                    Margin="0,0,0,25"
                    FontFamily="Segoe UI"/>
 
-        <!-- 2. Formularz -->
         <StackPanel Grid.Row="1" Margin="0,0,0,15">
-            <!-- Klient -->
             <TextBlock Text="KLIENT" FontSize="10" FontWeight="Bold" Foreground="#88FFFFFF" Margin="0,0,0,6"/>
             <ComboBox x:Name="ClientComboBox" 
                       Style="{StaticResource DialogComboBox}" 
@@ -354,7 +338,6 @@
                       DisplayMemberPath="FullName"
                       Margin="0,0,0,18"/>
 
-            <!-- Oferta -->
             <TextBlock Text="OFERTA" FontSize="10" FontWeight="Bold" Foreground="#88FFFFFF" Margin="0,0,0,6"/>
             <ComboBox x:Name="OfferComboBox" 
                       Style="{StaticResource DialogComboBox}" 
@@ -365,16 +348,13 @@
                       DisplayMemberPath="Name"
                       Margin="0,0,0,18"/>
 
-            <!-- Cena -->
             <TextBlock Text="CENA (ZŁ)" FontSize="10" FontWeight="Bold" Foreground="#88FFFFFF" Margin="0,0,0,6"/>
             <TextBox x:Name="PriceTextBox" Style="{StaticResource DialogTextBox}" Margin="0,0,0,18"/>
 
-            <!-- Data transakcji -->
             <TextBlock Text="DATA TRANSAKCJI" FontSize="10" FontWeight="Bold" Foreground="#88FFFFFF" Margin="0,0,0,6"/>
             <DatePicker x:Name="TransactionDatePicker" Style="{StaticResource DialogDatePicker}" Margin="0,0,0,18"/>
         </StackPanel>
 
-        <!-- 3. Przyciski akcji -->
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
             <Button Style="{StaticResource CancelButton}" Content="Anuluj" Click="CancelButton_Click" Margin="0,0,10,0" Height="30" Width="90"/>
             <Button Style="{StaticResource SaveButton}" Content="Zapisz" Click="SaveButton_Click" Width="110" Height="30"/>

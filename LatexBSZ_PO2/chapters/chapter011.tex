@@ -1,0 +1,54 @@
+\chapter{Instrukcja uruchomienia projektu}
+\label{ch:instrukcja}
+
+Niniejszy rozdział zawiera kompletny przewodnik pozwalający na pobranie, skonfigurowanie i poprawne uruchomienie aplikacji Rock Gym w środowisku deweloperskim lub testowym.
+
+\section{Wymagania systemowe i środowisko programistyczne}
+Do bezproblemowego uruchomienia i skompilowania projektu wymagane jest spełnienie następujących warunków:
+\begin{itemize}
+    \item \textbf{System operacyjny:} Windows 11 64-bit (lub nowszy zgodny z platformą WPF).
+    \item \textbf{Procesor:} klasy AMD Ryzen 5 5500U (lub odpowiednik o podobnej bądź wyższej wydajności).
+    \item \textbf{Pamięć RAM:} minimum 8 GB.
+    \item \textbf{Karta graficzna:} zintegrowana (brak szczególnych wymagań co do akceleratora).
+    \item \textbf{Środowisko bazy danych:} silnik MySQL w wersji 5.2.1 lub wyższej.
+    \item \textbf{Środowisko uruchomieniowe i programistyczne:} Microsoft Visual Studio (zalecana wersja 2026), zainstalowana platforma .NET w wersji 10.0 oraz biblioteka EntityFrameworkCore 9.0.0.
+\end{itemize}
+
+\section{Pobranie projektu i konfiguracja bazy danych}
+Całość kodu źródłowego, wraz z kopią zapasową bazy danych niezbędną do odtworzenia środowiska, znajduje się w udostępnionym, publicznym repozytorium w serwisie GitHub:
+\begin{center}
+    \url{https://github.com/BartlomiejKufel/rock-gym-personnel}
+\end{center}
+
+\subsection{Odtworzenie bazy danych z backupu}
+Wraz z repozytorium udostępniono plik powiązany ze schematem bazy danych gotowy do zaimportowania. Aby oprogramowanie działało poprawnie, należy zrealizować następujące kroki:
+\begin{enumerate}
+    \item Uruchomić lokalny serwer MySQL.
+    \item Za pomocą klienta (np. phpMyAdmin) utworzyć nową pustą bazę danych i zaimportować do niej dołączony do projektu plik \texttt{rock\_gym.sql}. Proces ten zbuduje od podstaw strukturę wszystkich wymaganych tabel oraz zasili je wstępnymi danymi testowymi.
+    \item Otworzyć rozwiązanie \textit{RockGym} w programie Visual Studio.
+    \item Wyszukać lokalizację definicji połączenia (\textit{ConnectionString}) która znajduje się w module \texttt{RockGymContext.cs} i odpowiednio podmienić parametry dostępowe (adres serwera localhost, port, nazwa utworzonej bazy, domyślny użytkownik i hasło serwera).
+\end{enumerate}
+
+\section{Uruchomienie aplikacji i skanera biometrycznego}
+Po poprawnym skonfigurowaniu \textit{ConnectionString}, projekt jest gotowy do uruchomienia.
+\begin{enumerate}
+    \item W środowisku Visual Studio należy przebudować projekt i rozpocząć debugowanie (np. korzystając ze skrótu \texttt{F5}).
+    \item Po uruchomieniu powinien ukazać się standardowy ekran logowania dla personelu.
+    \item W pobranym archiwum projektu umieszczono dodatkowy folder \texttt{fingerprints} zawierający graficzne próbki odcisków palców. Symulacja weryfikacji i autoryzacji odbywa się poprzez wczytanie jednego z dostępnych tam obrazów prosto do dedykowanego okna w aplikacji Rock Gym.
+\end{enumerate}
+
+\section{Dane logowania do kont testowych}
+W zaimplementowanej testowej bazie danych przygotowano kilka kont dla pracowników, pozwalające na bezproblemowe przetestowanie funkcjonalności systemu bez tracenia czasu na ręczną dodawanie użytkowników. Poniżej wypisano dostępne domyślne dane autoryzacyjne:
+\begin{itemize}
+    \item \textbf{Konto administratora / menedżera (pełen dostęp):}
+          \begin{itemize}
+              \item Login: \texttt{admin}
+              \item Hasło: \texttt{admin}
+          \end{itemize}
+          \vspace{0.3cm}
+    \item \textbf{Konto pracownicze (dostęp ograniczony do operacji podstawowych):}
+          \begin{itemize}
+              \item Login: \texttt{pracownik}
+              \item Hasło: \texttt{pracownik}
+          \end{itemize}
+\end{itemize}

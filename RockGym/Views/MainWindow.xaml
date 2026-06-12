@@ -15,10 +15,8 @@
         WindowState="Maximized">
 
     <Window.Resources>
-        <!-- Konwerter logiczny na widoczność -->
         <BooleanToVisibilityConverter x:Key="BoolToVis"/>
 
-        <!-- Mapowanie ViewModeli na odpowiednie Widoki (UserControls) -->
         <DataTemplate DataType="{x:Type vm:CustomersViewModel}">
             <views:CustomersView/>
         </DataTemplate>
@@ -38,7 +36,6 @@
             <views:SummaryView/>
         </DataTemplate>
 
-        <!-- Style dla przycisków w menu bocznym (Nawigacja) -->
         <Style x:Key="SidebarButton" TargetType="Button">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="Foreground" Value="#A0AEC0"/>
@@ -70,7 +67,6 @@
             </Setter>
         </Style>
 
-        <!-- Style dla przycisku Wyloguj -->
         <Style x:Key="LogoutButton" TargetType="Button">
             <Setter Property="Background" Value="#2D191E"/>
             <Setter Property="Foreground" Value="#FF6B6B"/>
@@ -104,24 +100,20 @@
         </Style>
     </Window.Resources>
 
-    <!-- Główny podział okna: Lewy panel (20%), Prawy panel (80%) -->
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="2*"/> <!-- Maksymalnie 20% szerokości -->
-            <ColumnDefinition Width="8*"/> <!-- Pozostałe 80% szerokości -->
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="8*"/>
         </Grid.ColumnDefinitions>
 
-        <!-- LEWY PANEL - Menu Nawigacyjne -->
         <Grid Grid.Column="0" Background="#111622">
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/> <!-- Logo i Użytkownik -->
-                <RowDefinition Height="*"/>    <!-- Przyciski nawigacji -->
-                <RowDefinition Height="Auto"/> <!-- Przycisk Wyloguj -->
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <!-- 1. Logo i Dane Zalogowanego Użytkownika -->
             <StackPanel Grid.Row="0" Margin="0,30,0,15" HorizontalAlignment="Center">
-                <!-- Logo -->
                 <Image Source="pack://application:,,,/Assets/logo.png" 
                        Height="70" 
                        Width="300"
@@ -129,7 +121,6 @@
                        HorizontalAlignment="Center"
                        Margin="0,0,0,15"/>
 
-                <!-- Informacja o zalogowanym -->
                 <TextBlock Text="ZALOGOWANY JAKO" 
                            FontSize="11" 
                            FontWeight="Bold" 
@@ -144,11 +135,9 @@
                            HorizontalAlignment="Center" 
                            Margin="0,0,0,15"/>
 
-                <!-- Separator -->
                 <Border Height="1.5" Width="180" Background="#2D3748" HorizontalAlignment="Center"/>
             </StackPanel>
 
-            <!-- 2. Lista Przycisków Nawigacyjnych -->
             <StackPanel Grid.Row="1" Margin="0,10,0,0">
                 <Button Style="{StaticResource SidebarButton}" 
                         Content="KLIENCI" 
@@ -191,7 +180,6 @@
                         Margin="0,2,0,0"/>
             </StackPanel>
 
-            <!-- 3. Przycisk Wyloguj (na samym dole) -->
             <Button Grid.Row="2"
                     Style="{StaticResource LogoutButton}" 
                     Content="WYLOGUJ SIĘ" 
@@ -200,25 +188,20 @@
                     Margin="15,0,15,25"/>
         </Grid>
 
-        <!-- PRAWY PANEL - Dynamiczna zawartość widoków -->
         <ContentControl Grid.Column="1" Content="{Binding CurrentViewModel}">
             <ContentControl.Style>
                 <Style TargetType="ContentControl">
-                    <!-- Szablon domyślny, gdy nie wybrano żadnej opcji (CurrentViewModel == null) -->
                     <Style.Triggers>
                         <Trigger Property="Content" Value="{x:Null}">
                             <Setter Property="Template">
                                 <Setter.Value>
                                     <ControlTemplate TargetType="ContentControl">
-                                        <!-- Przyciemniane tło ze ścianką wspinaczkową -->
                                         <Grid>
                                             <Grid.Background>
                                                 <ImageBrush ImageSource="pack://application:,,,/Assets/main-wall.jpg" Stretch="UniformToFill"/>
                                             </Grid.Background>
                                             
-                                            <!-- Nakładka przyciemniająca -->
                                             <Grid Background="#7F222529">
-                                                <!-- Tekst informacyjny -->
                                                 <TextBlock Text="WYBIERZ OPCJĘ" 
                                                            Foreground="#80FFFFFF" 
                                                            FontSize="24" 

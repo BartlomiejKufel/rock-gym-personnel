@@ -17,7 +17,6 @@
         Foreground="White">
 
     <Window.Resources>
-        <!-- Style dla TextBox -->
         <Style x:Key="DialogTextBox" TargetType="TextBox">
             <Setter Property="Background" Value="#1A1F26"/>
             <Setter Property="BorderBrush" Value="#2D3748"/>
@@ -53,7 +52,6 @@
             </Setter>
         </Style>
 
-        <!-- Style dla przycisków -->
         <Style x:Key="DialogButton" TargetType="Button">
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="BorderThickness" Value="0"/>
@@ -76,7 +74,6 @@
             </Setter>
         </Style>
 
-        <!-- Przycisk Zapisz -->
         <Style x:Key="SaveButton" TargetType="Button" BasedOn="{StaticResource DialogButton}">
             <Setter Property="Background" Value="#FF7F3F"/>
             <Style.Triggers>
@@ -87,7 +84,6 @@
             </Style.Triggers>
         </Style>
 
-        <!-- Przycisk Anuluj -->
         <Style x:Key="CancelButton" TargetType="Button" BasedOn="{StaticResource DialogButton}">
             <Setter Property="Background" Value="#2D3748"/>
             <Style.Triggers>
@@ -98,7 +94,6 @@
             </Style.Triggers>
         </Style>
 
-        <!-- Styl dla DatePicker -->
         <Style x:Key="DialogDatePicker" TargetType="DatePicker">
             <Setter Property="Background" Value="#1A1F26"/>
             <Setter Property="BorderBrush" Value="#2D3748"/>
@@ -124,7 +119,6 @@
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
 
-                                <!-- Pole tekstowe -->
                                 <DatePickerTextBox x:Name="PART_TextBox"
                                                    Grid.Column="0"
                                                    Focusable="{TemplateBinding Focusable}"
@@ -139,7 +133,6 @@
                                                    CaretBrush="#FF7F3F"
                                                    SelectionBrush="#4A5568"/>
 
-                                 <!-- Przycisk kalendarza -->
                                 <Button x:Name="PART_Button"
                                         Grid.Column="1"
                                         Width="30"
@@ -161,7 +154,6 @@
                                     </Button.Template>
                                 </Button>
 
-                                <!-- Popup do wysuwania kalendarza -->
                                 <Popup x:Name="PART_Popup"
                                        AllowsTransparency="True"
                                        Placement="Bottom"

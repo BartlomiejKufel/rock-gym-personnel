@@ -1,0 +1,51 @@
+\chapter{Wprowadzenie}
+\label{cha:wprowadzenie}
+
+%---------------------------------------------------------------------------
+\section{Opis analizowanego problemu}
+\label{sec:opisProblemu}
+
+Zarządzanie nowoczesnym obiektem sportowym, jakim jest ścianka wspinaczkowa, wymaga sprawnej obsługi dużej liczby klientów, transakcji oraz sprawnej weryfikacji tożsamości. Tradycyjne metody weryfikacji tożsamości, opierające się na fizycznych kartach członkowskich lub podawaniu nazwiska, są często nieefektywne. Klienci zapominają kart, co wydłuża kolejki w recepcji, a same karty mogą zostać pożyczone osobom nieuprawnionym. Nie mówiąc o kosztach prodkucji takowych kart
+
+Problem ten rodzi potrzebę stworzenia systemu, który zautomatyzuje i zabezpieczy proces weryfikacji tożsamości, odciążając personel obiektu. Biometryczna kontrola dostępu, połączona z nowoczesną aplikacją do zarządzania, stanowi odpowiedź na te wyzwania.
+
+%---------------------------------------------------------------------------
+\section{Cel projektu, kontekst i zakres realizacji}
+\label{sec:celZakres}
+
+Głównym celem projektu jest stworzenie aplikacji desktopowej ,,Rock Gym'' dla personelu ścianki wspinaczkowej, zintegrowanej ze skanerem kodów QR oraz systemem biometrycznym opartym na rozpoznawaniu odcisków palców.
+
+\textbf{Kontekst zastosowania:}
+Aplikacja przeznaczona jest do pracy na recepcji (oraz dla menadżerów obiektu). Obsługuje codzienne interakcje z klientem: od momentu jego pierwszej rejestracji, przez zakup karnetu, aż po każdorazowe wejście na obiekt, weryfikowane za pomocą skanu odcisku palca lub kodu QR.
+
+\textbf{Zakres zrealizowanych funkcjonalności:}
+\begin{itemize}
+    \item Zarządzanie bazą klientów (dodawanie, edycja, usuwanie, historia transakcji).
+    \item Zarządzanie pracownikami (nadawanie ról i uprawnień).
+    \item Obsługa karnetów oraz wejść jednorazowych.
+    \item Tworzenie i edycja powiadomień oraz wydarzeń.
+    \item Sprawdzanie ilości zapisanych klientów na wydarzenia.
+    \item Generowanie kodów QR i weryfikacja ich za pomocą skanera.
+    \item Przyglądanie statystyk utargu z danego miesiąca oraz dnia.
+    \item System biometryczny: wprowadzanie i analiza obrazów linii papilarnych, weryfikacja tożsamości na ich podstawie.
+\end{itemize}
+
+%---------------------------------------------------------------------------
+\section{Analiza istniejących rozwiązań}
+\label{sec:istniejaceRozwiazania}
+
+Na rynku istnieje wiele gotowych systemów do zarządzania siłowniami i klubami fitness, jednak rzadko odpowiadają one specyficznym potrzebom ścianek wspinaczkowych. Do najpopularniejszych rozwiązań należą:
+
+\subsection{WodGuru}\cite{WodGuru}
+WodGuru to popularny w Polsce system webowy do obsługi klubów sportowych (głównie CrossFit i sztuki walki). Oferuje przejrzysty panel do zarządzania grafikami, karnetami i automatycznymi płatnościami. Jego wadą jest jednak brak możliwości wejść za pomocą aplikacji mobilnej klubu. Wymaga ona od klubu wykupienia dostępu do funkcjonalności.
+
+\subsection{eFitness}\cite{eFitness}
+eFitness to jeden z największych systemów zarządzania klubami fitness w Europie. Jest to rozwiązanie wysokiej klasy, oferujące kody wejściowe, zapisy na wydarzenia oraz rozbudowane analizy. System ten jest jednak zbyt rozbudowany i skomplikowany w obsłudze dla mniejszych, specyficznych obiektów jak mniejsze ściany wspinaczkowe.
+
+\subsection{Perfect Gym}\cite{PerfectGym}
+Globalna platforma do zarządzania obiektami sportowymi. Posiada moduły kontroli dostępu, lecz w standardzie bazuje na kodach QR i kartach zbliżeniowych. Mimo szerokich możliwości, opiera się na modelu abonamentowym i nie posiada żadnych rozwiązań biometrycznych.
+
+\subsection{Nowość w projektowanym systemie}
+Innowacyjnością aplikacji ,,Rock Gym'' jest stworzenie rozwiązania idealnie dopasowanego do potrzeb małych i średnich obiektów wspinaczkowych, w przeciwieństwie do skomplikowanych korporacyjnych molochów (takich jak eFitness). W odróżnieniu od WodGuru czy Perfect Gym, system ten jest wolny od kosztownych abonamentów oraz ukrytych opłat za podstawowe funkcjonalności.
+
+Kluczową nowością jest pełna integracja weryfikacji biometrycznej (rozpoznawanie odcisków palców) bezpośrednio w aplikacji desktopowej. Dzięki lokalnemu środowisku rozwiązanie to gwarantuje najwyższą niezawodność i błyskawiczną weryfikację na miejscu, bez żadnych kart czy kodów. Jest to idealne rozwiązanie dla ścianek wspinaczkowych, które dbają o wygodę i bezpieczeństwo swoich klientów.

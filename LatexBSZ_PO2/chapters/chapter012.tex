@@ -1,0 +1,23 @@
+\chapter{Podsumowanie i wnioski końcowe}
+\label{ch:podsumowanie}
+
+Celem tego projektu było zaprojektowanie, zaimplementowanie i przetestowanie desktopowej aplikacji do zarządzania systemem dostępu na obiekcie wspinaczkowym, wykorzystującej technologię biometryczną opartą o obrazy odcisków palców.
+
+\section{Ocena stopnia realizacji założeń projektowych}
+Wszystkie założenia funkcjonalne i niefunkcjonalne postawione na etapie analizy wymagań zostały zrealizowane. Zbudowano stabilną aplikację okienkową w technologii WPF połączoną z relacyjną bazą danych MySQL. System z powodzeniem realizuje podstawowe operacje dla recepcji (obsługa klientów, sprzedaż karnetów, system ról i uprawnień personelu, podgląd statystyk), znacząco odciążając pracowników od ręcznego zarządzania ruchem na ściance.
+
+\section{Wnioski z działania systemu biometrycznego}
+Wdrożenie i przetestowanie algorytmu biometrycznego opartego o funkcje skrótu (Hash) udowodniło, że przy określonych warunkach i progach akceptacji (82\%) może on stanowić działającą alternatywę dla drogich systemów komercyjnych. Pozwoliło to w optymalny sposób zbalansować wskaźniki FAR (False Acceptance Rate) oraz FRR (False Rejection Rate).
+
+Największą wartością dodaną zaprojektowanego, hybrydowego modelu weryfikacji okazało się jednak wdrożenie kodów QR. Ścianka wspinaczkowa to bardzo niebezpieczne środowisko pracy dla elektroniki, w którym dłonie klientów ulegają naturalnym mikrourazom co skutecznie zaburza pracę skanerów. Dzięki dodaniu mechanizmu weryfikacji za pomocą kodów QR klienci o mocno zdartych palcach zyskali sprawną alternatywę na wejście na ściankę.
+
+\section{Napotkane problemy i perspektywy rozwoju}
+Największą trudnością napotkaną podczas realizacji projektu był dobór optymalnego progu akceptacji dla algorytmu \textit{aHash}. Ze względu na to, że nawet zupełnie obce odciski palców mają pewien procent wspólnych bitów, systemy oparte na prostym haszowaniu najlepiej sprawdzają się w niewielkich, zamkniętych bazach danych. W takich warunkach ryzyko błędnego zidentyfikowania nowej osoby pozostaje na akceptowalnie niskim poziomie.
+
+Mając na uwadze duży potencjał stworzonego systemu, proces jego rozbudowy można w przyszłości kontynuować o następujące funkcjonalności:
+\begin{itemize}
+    \item \textbf{Aplikacja webowa dla klientów:} dedykowana aplikacja webowa dostępna dla klientów, w której użytkownik posiadałby wirtualną kartę klubową (w postaci kodu QR), możliwość zapisywania się na wydarzenia, przeglądania swoich aktywnych ofert oraz statystyk. Aktualnie trwaja zaawansowane prace nad taką aplikacją, której wersja demonstracyjna jest dostępny pod adresem: https://github.com/BartlomiejKufel/projekt-gym-rock.
+    \item \textbf{Integracja ze skanerem biometrycznym:} fizyczne połączenie oprogramowania ze skanerami biometrycznymi i bramkami obrotowymi. Umożliwiłoby to całkowicie zautomatyzowane i bezobsługowe wejście na obiekt, nawet bez obecności pracowników recepcji.
+    \item \textbf{Rozbudowa bazy biometrycznej:} umożliwienie przypisania znacznie większej liczby próbek biometrycznych do konkretnego użytkownika. Zwiększenie limitu wzorców dla jednej osoby ułatwiłoby dopasowanie z wykorzystaniem algorytmu \textit{aHash}, dając systemowi więcej punktów odniesienia w przypadku np. tymczasowego uszkodzenia naskórka na jednym z palców.
+\end{itemize}
+

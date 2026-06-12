@@ -1,0 +1,34 @@
+\chapter{Implementacja aplikacji}
+\label{ch:implementacja}
+
+Aplikację Rock Gym stworzono przy użyciu nowoczesnych narzędzi programistycznych, dzięki czemu kod jest przejrzysty, a cały system prosty w rozbudowie. Zastosowanie programowania obiektowego i wzorca MVVM ułatwiło oddzielenie interfejsu użytkownika od logiki biznesowej oraz komunikacji z bazą danych.
+
+\section{Logika działania aplikacji i operacje CRUD}
+
+Głównym zadaniem aplikacji jest efektywne zarządzanie klientami i obiektem. Jest ono realizowane przez klasyczne operacje CRUD. Przykładowo, zarządzanie tabelą użytkowników znajduje się w pliku \texttt{CustomersViewModel.cs}. Z poziomu widoku pracownik może dodawać nowych klientów, edytować ich dane, usuwać czy przypisywać formy autoryzacji.
+
+Poniższy fragment kodu z pliku \texttt{CustomersViewModel.cs} obrazuje metodę odpowiedzialną za usunięcie klienta(Delete):
+
+\lstinputlisting[style=csharpStyle, caption= Metoda odpowiedzialna za usuwanie użytkowników z bazy, label=ch007_l01]{src/ExecuteDeleteCustomer.cs}
+
+Powyższy kod prezentuje procedurę \texttt{ExecuteDeleteCustomer}, która w pierwszej kolejności weryfikuje uprawnienia zalogowanego pracownika (wymagana jest rola administratora) oraz blokuje możliwość usunięcia własnego konta. Po wyświetleniu użytkownikowi okna dialogowego (\texttt{CustomMessageBox}) i otrzymaniu akceptacji, aplikacja nawiązuje połączenie z bazą przy użyciu klasy \texttt{RockGymContext}. Znaleziony rekord klienta jest usuwany metodą \texttt{Remove()}, a ostateczne zmiany trafiają do bazy przez wywołanie metody \texttt{SaveChanges()}. Całość została zabezpieczona w bloku \texttt{try-catch}, co w razie błędu chroni aplikację przed wyłączeniem i bezpiecznie informuje personel o zaistniałej sytuacji.
+
+\section{Mechanizmy bezpieczeństwa i autoryzacji biometrycznej}
+
+Zapewnienie bezpieczeństwa poprzez sprawne procesy autoryzacji to kluczowy cel systemu. Rock Gym pozwala na dwutorową identyfikację. Po pierwsze, autoryzacja personelu oparta o loginy i hasła wpisywane w aplikacji.
+
+Mechanizm obsługujący poprawne zalogowanie, wraz z weryfikacją z wykorzystaniem bcrypta, znajduje się w klasie \texttt{LoginViewModel.cs}:
+
+\lstinputlisting[style=csharpStyle, caption=Metoda sprawdzająca dane logowania personelu do aplikacji, label=ch007_l02]{src/ExecuteLogin.cs}
+
+Powyższy kod demonstruje proces logowania i autoryzacji personelu. Kluczowym mechanizmem zabezpieczającym w tej metodzie jest wykorzystanie biblioteki \texttt{BCrypt.Net}. Zamiast porównywać wpisane przez użytkownika hasło w postaci jawnej z tekstem zapisanym w tabeli, używana jest funkcja \texttt{BCrypt.Verify()}. Oblicza ona na podstawie jawnie wpisanego hasła hasz i weryfikuje jego zgodność ze wzorcem z bazy \texttt{user.Password}. Podejście to znacząco zwiększa poziom bezpieczeństwa -- nawet wyciek bazy danych nie pozwoli na łatwe odtworzenie oryginalnych haseł użytkowników. Ponadto kod ten przed dopuszczeniem do aplikacji sprawdza, czy dany użytkownik na pewno posiada uprawnienia personelu (rolę o id 1 lub 2).
+
+Dla klientów siłowni wdrożono z kolei intuicyjny proces autoryzacji wejścia na podstawie biometrii odcisku palca. Po założeniu konta w systemie, od klienta pobierany jest odpowiedni wzorzec i hashowany bezpośrednio do tabeli. Generowanie hashu na podstawie obrazu odcisku palca odbywa się metodą \texttt{CalculateAverageHash} (listing nr. \ref{ch007_l03}) z klasy \texttt{FingerprintHashing}. Algorytm przekształca obraz w 64-bitowy cyfrowy wzorzec, normalizując go do rozmiaru 8x8 pikseli i obliczając średnią jasność. Następnie każdy piksel jest porównywany ze średnią - jeśli jest jaśniejszy lub równy, bit w haszu jest ustawiany na 1.
+
+\lstinputlisting[style=csharpStyle, caption=Generowanie hashu na podstawie obrazu odcisku palca, label=ch007_l03]{src/CalculateAverageHash.cs}
+
+Proces późniejszego sprawdzania klienta znajduje się w module \texttt{FingerprintScannerViewModel}. Kiedy na "skanerze" pojawi się nowy obiekt, jego hash odcisku palca trafia do pętli, która na bieżąco porównuje prawdopodobieństwo identyczności z każdą zapisaną osobą:
+
+\lstinputlisting[style=csharpStyle, caption=Metoda sprawdzająca prawdopodobieństwo dopasowania hashy, label=ch007_l04]{src/HandleFingerprintProcessing.cs}
+
+W przypadku gdy algorytm dopasowujący rozpozna odcisk palca w bazie z odpowiednią precyzją (próg akceptacji 82\%), z bazy wyciągany jest profil pasującego użytkownika wraz z informacją o aktywnych karnetach. Pracownik jednym kliknięciem w przycisk ma wtedy możliwość zarejestrowania wejścia dla takiego użytkownika (operacja typu Update).

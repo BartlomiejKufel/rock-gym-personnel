@@ -1,0 +1,62 @@
+\chapter{Wymagania systemowe i założenia}
+\label{cha:wymagania}
+
+Aplikacja ,,Rock Gym'' musi spełniać szereg wymagań, aby w pełni realizować postawione przed nią cele. Podzielono je na wymagania funkcjonalne oraz niefunkcjonalne. Dodatkowo zdefiniowano kluczowe założenia dla modułu biometrycznego, wynikające ze specyfiki obiektu wspinaczkowego.
+
+%---------------------------------------------------------------------------
+\section{Wymagania funkcjonalne}
+\label{sec:wymaganiaFunkcjonalne}
+
+Aplikacja obsługuje dwa główne poziomy uprawnień użytkowników systemu: \textbf{Pracownika} (obsługa recepcji) oraz \textbf{Administratora / Menadżera} (zarządzanie całym obiektem). Poniżej zestawiono wymagania dla obu tych ról.
+
+\subsection{Wymagania dla Pracownika recepcji}
+Pracownik ma dostęp do podstawowych funkcji operacyjnych i sprzedażowych:
+\begin{itemize}
+    \item \textbf{Zarządzanie klientami:} Dodawanie nowych klientów, edycja ich podstawowych danych, przypisywanie odcisków palca, generowanie kodów QR.
+    \item \textbf{Obsługa wejść:} Skanowanie i weryfikacja kodów QR oraz autoryzacja wejść stałych klientów przy użyciu skanera odcisków palców.
+    \item \textbf{Karnety i płatności:} Przypisywanie i sprzedaż karnetów dla klientów, przeglądanie historii ich transakcji.
+    \item \textbf{Wydarzenia i powiadomienia:} Możliwość podglądu zaplanowanych wydarzeń (tylko tych które się jeszcze nie odbyły), sprawdzanie ilości zapisanych klientów na wydarzenia oraz tworzenie, usuwanie i edycja powiadomień.
+\end{itemize}
+
+\subsection{Wymagania dla Administratora (Menadżera)}
+Administrator posiada wszystkie uprawnienia pracownika, a ponadto dysponuje dodatkowymi narzędziami:
+\begin{itemize}
+    \item \textbf{Zarządzanie personelem:} Dodawanie nowych kont pracowników, modyfikowanie ich ról oraz usuwanie kont w systemie.
+    \item \textbf{Zarządzanie ofertą:} Modyfikacja typów karnetów, wejściówek oraz ustalanie ich cen.
+    \item \textbf{Zarządzanie wydarzeniami:} Tworzenie, edycja i usuwanie nadchodzących wydarzeń (np. zawodów wspinaczkowych, sekcji)
+    \item \textbf{Moduł statystyczny:} Przeglądanie zaawansowanych statystyk utargu z wybranego dnia lub miesiąca, możliwość pobrania wyciągów z całego miesiąca. Sprawdzanie ilości wejść w danym dniu.
+\end{itemize}
+
+%---------------------------------------------------------------------------
+\section{Wymagania niefunkcjonalne}
+\label{sec:wymaganiaNiefunkcjonalne}
+
+\begin{itemize}
+    \item \textbf{Wydajność:} Czas od wstawienia zdjęcia odcisku palca (lub zeskanowania kodu QR) do momentu autoryzacji wejścia w aplikacji nie powinien przekraczać 2 sekund, aby zapobiec tworzeniu się kolejek w recepcji.
+    \item \textbf{Niezawodność:} System jako natywna aplikacja desktopowa w środowisku .NET musi działać stabilnie w systemie Windows i zapewniać sprawne działanie kluczowych funkcji autoryzacyjnych na miejscu.
+    \item \textbf{Bezpieczeństwo i dostęp do danych:} Aplikacja gwarantuje bezpieczne połączenie z bazą danych przy wykorzystaniu technologii Entity Framework Core jako mechanizmu mapowania obiektowo-relacyjnego (ORM). Zastosowanie tego narzędzia automatyzuje operacje bazodanowe i chroni przed atakami typu SQL Injection.
+    \item \textbf{Użyteczność:} Interfejs graficzny użytkownika musi być wysoce intuicyjny, co pozwoli na zminimalizowanie czasu potrzebnego na wdrożenie nowego pracownika recepcji.
+\end{itemize}
+
+\textbf{Środowisko testowe} \\
+Testy aplikacji odbyły się w następującym środowisku:
+\begin{itemize}
+    \item \textbf{System operacyjny:} Windows 11 64-bit
+    \item \textbf{Procesor:} AMD Ryzen 5 5500U
+    \item \textbf{Pamięć RAM:} 8 GB
+    \item \textbf{Karta graficzna:} Zintegrowana
+    \item \textbf{Środowisko bazy danych:} MySQL 5.2.1
+    \item \textbf{Biblioteka do połączenia bazy danych z aplikacją:} EntityFrameworkCore 9.0.0
+    \item \textbf{Środowisko desktopowe:} .NET 10.0 (WPF)
+\end{itemize}
+
+%---------------------------------------------------------------------------
+\section{Założenia i ograniczenia systemu biometrycznego}
+\label{sec:zalozeniaBiometryczne}
+
+Wdrożenie systemu biometrycznego w tak specyficznym środowisku, jakim jest ścianka wspinaczkowa, narzuca konkretne warunki brzegowe:
+\begin{itemize}
+    \item \textbf{Warunki środowiskowe i jakość danych:} Skóra dłoni wspinaczy jest często narażona na ekstremalne ścieranie, odciski, a w trakcie wizyty może być ona pokryta magnezją. Z tego względu system i algorytmy porównujące cechy odcisku palca muszą uwzględniać lekko większą tolerancji dla trudniejszych w analizie obrazów linii papilarnych (powyżej 82\% dopasowania).
+    \item \textbf{Alternatywne formy wejścia:} Ze względu na wyżej wymienione ryzyko fizycznego "starcia" odcisków palców u bardzo zaawansowanych wspinaczy, aplikacja rygorystycznie zakłada funkcjonowanie opcji alternatywnej -- wejścia poprzez bezpieczny i szybko generowany kod QR.
+    \item \textbf{Proces rejestracji próbek:} Oczekuje się, aby proces wstępnego pobrania odcisku (rejestracji nowej osoby) następował tuż przed rozpoczęciem wspinania, a dłonie klienta były czyste, co pozwoli zapisać w systemie wzorzec możliwie najwyższej jakości.
+\end{itemize}

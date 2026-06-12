@@ -18,7 +18,6 @@
         <BooleanToVisibilityConverter x:Key="BoolToVis"/>
         <services:ByteToImageConverter x:Key="ByteToImageConverter"/>
 
-        <!-- Styl bazowy dla przycisków -->
         <Style x:Key="ManagerButton" TargetType="Button">
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="BorderThickness" Value="0"/>
@@ -64,7 +63,6 @@
             </Style.Triggers>
         </Style>
 
-        <!-- Styl dla przycisku usuwania -->
         <Style x:Key="DeleteActionButton" TargetType="Button">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="BorderThickness" Value="0"/>
@@ -90,23 +88,19 @@
 
     <Grid Margin="20">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/> <!-- Nagłówek i status -->
-            <RowDefinition Height="*"/>    <!-- Lista odcisków -->
-            <RowDefinition Height="Auto"/> <!-- Dolne przyciski -->
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <!-- 1. Nagłówek -->
         <StackPanel Grid.Row="0" Margin="0,0,0,15">
             <TextBlock Text="Zarządzanie odciskami palców" FontSize="18" FontWeight="Bold" Foreground="#FF7F3F" FontFamily="Segoe UI"/>
             <TextBlock Text="{Binding ClientName, FallbackValue='Klient', StringFormat='Klient: {0}'}" FontSize="13" Foreground="White" FontWeight="SemiBold" FontFamily="Segoe UI" Margin="0,4,0,0"/>
             <TextBlock Text="{Binding StatusText}" FontSize="11" Foreground="#88FFFFFF" FontFamily="Segoe UI" Margin="0,2,0,0"/>
-            <!-- Separator -->
             <Border Height="1" Background="#2D3748" Margin="0,10,0,0"/>
         </StackPanel>
 
-        <!-- 2. Lista zarejestrowanych odcisków -->
         <Grid Grid.Row="1" Margin="0,0,0,15">
-            <!-- Pusty stan, gdy brak odcisków -->
             <TextBlock Text="Brak zarejestrowanych odcisków palców dla tego użytkownika." 
                        Foreground="#88FFFFFF" 
                        FontSize="13" 
@@ -128,7 +122,6 @@
                 </TextBlock.Style>
             </TextBlock>
 
-            <!-- ScrollViewer i ItemsControl z listą -->
             <ScrollViewer VerticalScrollBarVisibility="Auto">
                 <ScrollViewer.Style>
                     <Style TargetType="ScrollViewer">
@@ -147,23 +140,20 @@
                             <Border Background="#1A1F26" BorderBrush="#2D3748" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,0,10">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto"/> <!-- Miniatura -->
-                                        <ColumnDefinition Width="*"/>    <!-- Szczegóły -->
-                                        <ColumnDefinition Width="Auto"/> <!-- Usuń -->
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
 
-                                    <!-- Miniatura odcisku -->
                                     <Border Grid.Column="0" Width="40" Height="40" CornerRadius="4" ClipToBounds="True" Background="#111622" VerticalAlignment="Center">
                                         <Image Source="{Binding FingerprintImage, Converter={StaticResource ByteToImageConverter}}" Stretch="UniformToFill" RenderOptions.BitmapScalingMode="HighQuality"/>
                                     </Border>
 
-                                    <!-- Informacje -->
                                     <StackPanel Grid.Column="1" Margin="12,0,0,0" VerticalAlignment="Center">
                                         <TextBlock Text="{Binding FormattedDate, StringFormat='Zarejestrowano: {0}'}" Foreground="White" FontSize="12" FontWeight="SemiBold" FontFamily="Segoe UI"/>
                                         <TextBlock Text="{Binding FingerprintHash, StringFormat='Hash: {0}'}" Foreground="#A0AEC0" FontSize="10" FontFamily="Consolas" Margin="0,2,0,0"/>
                                     </StackPanel>
 
-                                    <!-- Przycisk usuwania -->
                                     <Button Grid.Column="2" 
                                             Content="🗑" 
                                             Style="{StaticResource DeleteActionButton}"
@@ -179,7 +169,6 @@
             </ScrollViewer>
         </Grid>
 
-        <!-- 3. Dolne przyciski -->
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
